@@ -1,11 +1,11 @@
-from pico2d import *
+﻿from pico2d import *
 
 import time
 import random
 
-class KnightJ:
+class Lizard:
    
-    knightJImage = None
+    LizardJImage = None
 
     STAND = 3
     RUN = 2
@@ -15,8 +15,8 @@ class KnightJ:
     # ----------------
     def __init__(self, playerX):
     # ----------------
-        if KnightJ.knightJImage == None:
-           KnightJ.knightJImage = load_image("KnightJ.png")
+        if Lizard.LizardJImage == None:
+           Lizard.LizardJImage = load_image("KnightJ.png")
 
         self.frameNum = { self.STAND : 4,
                       self.RUN : 4,
@@ -53,7 +53,7 @@ class KnightJ:
     # ----------------
     def draw(self):
     # ----------------
-        self.knightJImage.clip_draw(100 * self.frame, (100 * self.state), 
+        self.LizardJImage.clip_draw(100 * self.frame, (100 * self.state), 
                                     100, 100, self.x - self.backgroundX, self.y)
     # ----------------
     def setPlayerState(self, state):

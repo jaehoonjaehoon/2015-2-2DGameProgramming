@@ -32,7 +32,7 @@
   <ItemGroup>
     <Compile Include="Game_FrameWork.py" />
     <Compile Include="Knight H_Client.py" />
-    <Compile Include="KnightJ.py">
+    <Compile Include="Lizard.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Logo_State.py" />

@@ -128,6 +128,7 @@ class Player:
                     if self.backgroundX >= self.scroll:
                         if self.x < 785:
                             self.x += self.moveSpeed
+
                     else:
                         if self.x < 645:
                             self.x += self.moveSpeed
