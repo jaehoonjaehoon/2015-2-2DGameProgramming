@@ -1,4 +1,4 @@
-from pico2d import *
+﻿from pico2d import *
 
 import time
 import random
@@ -51,8 +51,8 @@ class Yeti:
     def update(self):
     # ----------------
         self.frameRate()
-        if self.state != self.DIE:
-            self.moveToPlayer()
+        #if self.state != self.DIE:
+            #self.moveToPlayer()
 
     # ----------------
     def draw(self):
@@ -85,48 +85,52 @@ class Yeti:
                 self.frame = 0
             
     # ----------------
-    def moveToPlayer(self):
+    #def moveToPlayer(self):
+    ## ----------------
+    #    if self.hp >= 500:
+    #        distance = 2
+    #    else:
+    #        distance = 4
+
+    #    if self.state != self.STAND:
+    #        return
+
+    #    if (self.x, self.y) == (self.playerX, self.playerY):
+    #        return
+
+    #    if self.x < self.playerX:
+
+    #        if self.y + distance < self.playerY:
+    #            self.x += distance
+    #            self.y += distance
+
+    #        elif self.y - distance > self.playerY:
+    #            self.x += distance
+    #            self.y -= distance
+
+    #        else:
+    #            self.x += distance
+
+    #    elif self.x > self.playerX:
+
+    #        if self.y + distance < self.playerY:
+    #            self.x -= distance
+    #            self.y += distance
+
+    #        elif self.y - distance > self.playerY:
+    #            self.x -= distance
+    #            self.y -= distance
+
+    #        else:
+    #            self.x -= distance
+
+    #    else:
+    #        if self.y < self.playerY:
+    #            self.y += distance
+
+    #        elif self.y > self.playerY:
+    #            self.y -= distance
     # ----------------
-        if self.hp >= 500:
-            distance = 2
-        else:
-            distance = 4
-
-        if self.state != self.STAND:
-            return
-
-        if (self.x, self.y) == (self.playerX, self.playerY):
-            return
-
-        if self.x < self.playerX:
-
-            if self.y + distance < self.playerY:
-                self.x += distance
-                self.y += distance
-
-            elif self.y - distance > self.playerY:
-                self.x += distance
-                self.y -= distance
-
-            else:
-                self.x += distance
-
-        elif self.x > self.playerX:
-
-            if self.y + distance < self.playerY:
-                self.x -= distance
-                self.y += distance
-
-            elif self.y - distance > self.playerY:
-                self.x -= distance
-                self.y -= distance
-
-            else:
-                self.x -= distance
-
-        else:
-            if self.y < self.playerY:
-                self.y += distance
-
-            elif self.y > self.playerY:
-                self.y -= distance
+    def get_bb(self):
+    # ----------------
+        return self.x - 50, self.y - 50, self.x + 50, self.y + 50

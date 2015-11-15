@@ -25,7 +25,7 @@ class Lizard:
 
         self.frametime = { self.STAND : 0.1,
                           self.RUN : 0.4,
-                          self.ATTACK : 0.05,
+                          self.ATTACK : 0.2,
                           self.DIE : 0.3 }
 
         self.state = self.RUN
@@ -41,7 +41,6 @@ class Lizard:
 
         self.monsterX = 0
         self.monsterY = 0
-        self.playerDir = 1
 
     # ----------------
     def update(self):
@@ -49,6 +48,7 @@ class Lizard:
         self.frameRate()
         if self.state != self.STAND:
             self.move()
+        self.motion()
 
     # ----------------
     def draw(self):
@@ -58,15 +58,10 @@ class Lizard:
     # ----------------
     def setPlayerState(self, state):
     # ----------------
-        if state == 0:
+        #if state == 0 or state == 1:
+        #    self.state = self.RUN
+        if state == 2:
             self.state = self.STAND
-        elif state == 1:
-            self.state = self.RUN
-    # ----------------
-    def setPlayerDir(self, dir):
-    # ----------------
-        self.playerDir = dir
-
     # ----------------
     def setBackgroundX(self, x):
     # ----------------
@@ -91,7 +86,15 @@ class Lizard:
     # ----------------
     def move(self):
     # ----------------
-       if self.x < 800 and self.state == self.RUN and self.playerDir == 1:
+       if self.x < 1125 and self.state == self.RUN :
           self.x += 5 
-       elif self.x < 800 and self.state == self.RUN and self.playerDir == 2:
-          self.x -= 5 
+       
+
+    # ----------------
+    def motion(self):
+    # ----------------
+       pass
+    # ----------------
+    def get_bb(self):
+    # ----------------
+        return self.x - 50, self.y - 50, self.x + 50, self.y + 50

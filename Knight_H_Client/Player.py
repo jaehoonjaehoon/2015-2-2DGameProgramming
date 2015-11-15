@@ -12,6 +12,7 @@ class Player:
 
     STAND = 0
     WALK = 1
+    DIE = 2
 
 
     #-----------------

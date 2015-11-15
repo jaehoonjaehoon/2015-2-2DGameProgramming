@@ -34,7 +34,7 @@ class Stage1:
         self.backgroundX = x
 
 
-
+        
 def enter():
     global stage1, player, yeti, ui, lizard
     stage1 = Stage1()
@@ -82,8 +82,8 @@ def update():
     yeti.setBackgroundX(stage1.backgroundX)
     yeti.setPlayerPos(player.x + stage1.backgroundX, player.y)
     lizard.setBackgroundX(stage1.backgroundX)
-    lizard.setPlayerDir(player.dir)
     lizard.setPlayerState( player.state )
+    lizard.setMonsterX( yeti.x )
     lizard.update()
     scroll()
 
@@ -113,6 +113,17 @@ def scroll():
         elif player.x <= 150:
             if stage1.backgroundX >= 20:
                 stage1.backgroundX -= 5
+
+# ----------------
+def collide():
+# ----------------
+    left_a, bottom_a, right_a, top_a = a.get_bb()
+    left_b, bottom_b, right_b, top_b = a.get_bb()
+
+    if left_a > right_b: return False
+    if right_a > left_b: return False
+    if top_a > bottom_b: return False
+    if bottom_a > top_b: return False
 
 
 
