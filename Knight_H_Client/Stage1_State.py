@@ -107,7 +107,7 @@ def scroll():
     global stage1, player
 
     if player.state == player.WALK:
-        if player.x >= 600:
+        if player.x >= 640:
             if stage1.backgroundX < 340:
                 stage1.backgroundX += 5
         elif player.x <= 150:

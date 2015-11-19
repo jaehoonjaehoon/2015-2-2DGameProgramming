@@ -41,6 +41,7 @@ class Lizard:
 
         self.monsterX = 0
         self.monsterY = 0
+        self.scrollX = 0
 
     # ----------------
     def update(self):
@@ -49,12 +50,14 @@ class Lizard:
         if self.state != self.STAND:
             self.move()
         self.motion()
+        
 
     # ----------------
     def draw(self):
     # ----------------
         self.LizardJImage.clip_draw(100 * self.frame, (100 * self.state), 
                                     100, 100, self.x - self.backgroundX, self.y)
+        self.draw_bb()
     # ----------------
     def setPlayerState(self, state):
     # ----------------
@@ -78,10 +81,10 @@ class Lizard:
             self.currentTime = time.time()
             self.frame = int(self.frame + 1) % self.frameNum[self.state]
 
-        if self.state != self.DIE:
-            if self.frame == self.frameNum[self.state] - 1:
-                self.state = self.STAND
-                self.frame = 0
+        #if self.state != self.DIE:
+        #    if self.frame == self.frameNum[self.state] - 1:
+        #        self.state = self.STAND
+        #        self.frame = 0
       
     # ----------------
     def move(self):
@@ -97,4 +100,8 @@ class Lizard:
     # ----------------
     def get_bb(self):
     # ----------------
-        return self.x - 50, self.y - 50, self.x + 50, self.y + 50
+        return self.x - 50 - self.backgroundX, self.y - 50, self.x + 50 - self.backgroundX, self.y + 50
+    # ----------------
+    def draw_bb(self):
+    # ----------------
+        draw_rectangle(*self.get_bb())

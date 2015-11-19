@@ -53,13 +53,14 @@ class Yeti:
         self.frameRate()
         #if self.state != self.DIE:
             #self.moveToPlayer()
+        self.move()
 
     # ----------------
     def draw(self):
     # ----------------
         self.yetiImage.clip_draw(150 * self.frame, (150 * self.state), 
                                         150, 150, self.x - self.backgroundX, self.y)
-
+        self.draw_bb()
 
     # ----------------
     def setBackgroundX(self, x):
@@ -83,54 +84,17 @@ class Yeti:
             if self.frame == self.frameNum[self.state] - 1:
                 self.state = self.STAND
                 self.frame = 0
-            
+
     # ----------------
-    #def moveToPlayer(self):
-    ## ----------------
-    #    if self.hp >= 500:
-    #        distance = 2
-    #    else:
-    #        distance = 4
-
-    #    if self.state != self.STAND:
-    #        return
-
-    #    if (self.x, self.y) == (self.playerX, self.playerY):
-    #        return
-
-    #    if self.x < self.playerX:
-
-    #        if self.y + distance < self.playerY:
-    #            self.x += distance
-    #            self.y += distance
-
-    #        elif self.y - distance > self.playerY:
-    #            self.x += distance
-    #            self.y -= distance
-
-    #        else:
-    #            self.x += distance
-
-    #    elif self.x > self.playerX:
-
-    #        if self.y + distance < self.playerY:
-    #            self.x -= distance
-    #            self.y += distance
-
-    #        elif self.y - distance > self.playerY:
-    #            self.x -= distance
-    #            self.y -= distance
-
-    #        else:
-    #            self.x -= distance
-
-    #    else:
-    #        if self.y < self.playerY:
-    #            self.y += distance
-
-    #        elif self.y > self.playerY:
-    #            self.y -= distance
+    def move(self):
+    # ----------------
+        if self.state != self.ATTACK and self.x > 10:
+            self.x -= 5
     # ----------------
     def get_bb(self):
     # ----------------
-        return self.x - 50, self.y - 50, self.x + 50, self.y + 50
+        return self.x - 50 + self.backgroundX, self.y - 50, self.x + 50 + self.backgroundX, self.y + 50
+    # ----------------
+    def draw_bb(self):
+    # ----------------
+        draw_rectangle(*self.get_bb())
