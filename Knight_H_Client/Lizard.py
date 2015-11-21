@@ -90,7 +90,7 @@ class Lizard:
     def move(self):
     # ----------------
        if self.x < 1125 and self.state == self.RUN :
-          self.x += 5 
+          self.x += 2 
        
 
     # ----------------

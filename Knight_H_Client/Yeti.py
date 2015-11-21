@@ -80,20 +80,17 @@ class Yeti:
             self.currentTime = time.time()
             self.frame = int(self.frame + 1) % self.frameNum[self.state]
 
-        if self.state != self.DIE:
-            if self.frame == self.frameNum[self.state] - 1:
-                self.state = self.STAND
-                self.frame = 0
+        
 
     # ----------------
     def move(self):
     # ----------------
         if self.state != self.ATTACK and self.x > 10:
-            self.x -= 5
+            self.x -= 2
     # ----------------
     def get_bb(self):
     # ----------------
-        return self.x - 50 + self.backgroundX, self.y - 50, self.x + 50 + self.backgroundX, self.y + 50
+        return self.x - 50 - self.backgroundX, self.y - 50, self.x + 50 - self.backgroundX, self.y + 50
     # ----------------
     def draw_bb(self):
     # ----------------

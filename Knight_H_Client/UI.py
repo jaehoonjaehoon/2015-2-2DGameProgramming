@@ -33,6 +33,7 @@ class UI:
     def setPlayerHp(self, hp, maxhp):
         pHp = int(hp/maxhp) * 80 
         self.Hp.clip_draw(0, 0 , 80, pHp, 40, 65)
-        
+    
+   
 
     

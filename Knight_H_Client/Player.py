@@ -23,8 +23,8 @@ class Player:
 
         self.maxHp = 1000
         self.hp = 1000
-        self.maxMp = 100
-        self.mp = 100
+        self.maxMp = 200
+        self.mp = 200
 
         self.scroll = scroll
         

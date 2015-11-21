@@ -40,6 +40,9 @@
     <Compile Include="Player.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Portal.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Stage1_State.py" />
     <Compile Include="Title_State.py" />
     <Compile Include="UI.py">
