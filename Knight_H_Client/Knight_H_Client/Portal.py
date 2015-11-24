@@ -22,7 +22,7 @@ class Portal:
     # ----------------
     def get_bb(self):
     # ----------------
-        return self.x - self.backgroundX - 20, self.y + 30, self.x - self.backgroundX + 20, self.y - 30
+        return self.x - self.backgroundX - 20, self.y + 30, self.x - self.backgroundX + 20, self.y - 70
 
     # ----------------
     def draw_bb(self):

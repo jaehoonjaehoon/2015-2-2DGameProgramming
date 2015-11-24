@@ -25,7 +25,7 @@ class Lizard:
 
         self.frametime = { self.STAND : 0.1,
                           self.RUN : 0.4,
-                          self.ATTACK : 0.2,
+                          self.ATTACK : 0.5,
                           self.DIE : 0.3 }
 
         self.state = self.RUN
@@ -36,8 +36,8 @@ class Lizard:
         self.currentTime = time.time()
 
         self.maxHp = 1500
-        self.hp = 1500
-        self.att = 200
+        self.hp = 7000
+        self.att = 3
 
         self.monsterX = 0
         self.monsterY = 0
@@ -61,8 +61,7 @@ class Lizard:
     # ----------------
     def setPlayerState(self, state):
     # ----------------
-        #if state == 0 or state == 1:
-        #    self.state = self.RUN
+        
         if state == 2:
             self.state = self.STAND
     # ----------------
@@ -90,7 +89,7 @@ class Lizard:
     def move(self):
     # ----------------
        if self.x < 1125 and self.state == self.RUN :
-          self.x += 5 
+          self.x += 2 
        
 
     # ----------------

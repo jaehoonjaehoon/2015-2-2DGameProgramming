@@ -1,4 +1,4 @@
-import Game_FrameWork
+﻿import Game_FrameWork
 import Stage1_State
 
 from pico2d import *
@@ -6,11 +6,15 @@ from pico2d import load_music
 
 name = "TitleState"
 image = None
-
+titleBgm = None
 
 def enter():
-    global image
+    global image, titleBgm
     image = load_image('Title_State.png')
+    
+    titleBgm = load_music('TitleBgm.mp3')
+    titleBgm.set_volume(64)
+    titleBgm.repeat_play()
 
 
 
@@ -36,11 +40,10 @@ def draw():
 # ----------------
 def exit():
 # ----------------
-    global image
+    global image, titleBgm
 
     del(image)
-
-
+    del(titleBgm)
 
 
 
@@ -56,9 +59,3 @@ def pause():
 
 def resume():
     pass
-
-
-
-
-
-

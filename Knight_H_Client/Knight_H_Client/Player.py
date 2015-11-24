@@ -23,8 +23,8 @@ class Player:
 
         self.maxHp = 1000
         self.hp = 1000
-        self.maxMp = 100
-        self.mp = 100
+        self.maxMp = 1000
+        self.mp = 1000
 
         self.scroll = scroll
         
@@ -56,7 +56,7 @@ class Player:
     def draw(self):
     #-----------------
         self.playerImage.clip_draw(self.frame * 150, self.dir * 150 , 150, 150, self.x, self.y)
-
+        self.draw_bb()
     # ----------------
     def handle_events(self, event):
     # ----------------
@@ -166,3 +166,12 @@ class Player:
     def setBackgroundX(self, x):
     # ----------------
         self.backgroundX = x
+
+    # ----------------
+    def get_bb(self):
+    # ----------------
+        return self.x - 50, self.y - 50, self.x + 50, self.y + 50
+    # ----------------
+    def draw_bb(self):
+    # ----------------
+        draw_rectangle(*self.get_bb())

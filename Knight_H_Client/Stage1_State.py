@@ -19,6 +19,9 @@ stage1 = None
 player = None
 font = None
 
+
+yetiCount = 0
+lizardCount = 0
 yetiList = []
 lizardList = []
 
@@ -49,23 +52,23 @@ class Stage1:
 
         
 def enter():
-    global stage1, player, yetiList, ui, lizard, portal
+    global stage1, player, yetiList, ui, lizard, portal, yetiCount
     stage1 = Stage1()
     player = Player(340)
     lizard = Lizard(player.x)
     ui = UI()
     portal = Portal(1125, 200)
 
-    for i in range(0, 10):
+    for i in range(0, 2):
         yetiList.append(Yeti())
+        yetiCount += 1
 
 def exit():
-    global stage1, player, lizard, portal
+    global stage1, player, portal
     del(stage1)
     del(player)
-    del(lizard)
     del(portal)
-
+    
 
 
 def pause():
@@ -77,7 +80,7 @@ def resume():
 
 
 def handle_events():
-    global player, UI, lizardMpValue, gemumuMpValue, wizardMpValue, lizardList, lizardButton
+    global player, UI, lizardMpValue, gemumuMpValue, wizardMpValue, lizardList, lizardButton, lizardCount
 
     events = get_events()
 
@@ -120,28 +123,27 @@ def handle_events():
                       lizardButton = False
                       lizardList.append(Lizard(player.x))
                       print("리자드를 소환 합니다")
+                      lizardCount += 1
+                      player.mp -= lizardMpValue
                  
                                
         else:
            player.handle_events(event)
 
 def update():
-    global player, yetiList, lizard, stage1, portal
+    global player, yetiList, lizardList, stage1, portal, yetiCount, lizardCount
     
     player.update()
     player.setBackgroundX(stage1.backgroundX)
     
-    for yeti in yetiList:
-        yeti.update()
-        yeti.setBackgroundX(stage1.backgroundX)
-        yeti.setPlayerPos(player.x + stage1.backgroundX, player.y)
+    if( yetiCount > 0 ):
+     for yeti in yetiList:
+         yeti.update()
+         yeti.setBackgroundX(stage1.backgroundX)
+         yeti.setPlayerPos(player.x + stage1.backgroundX, player.y)
 
-    #lizard.setBackgroundX(stage1.backgroundX)
-    #lizard.setPlayerState( player.state )
-    #lizard.setMonsterX( yeti.x )
-    #lizard.update()
     
-    if( lizardList):
+    if( lizardCount > 0 ):
      for lizard in lizardList:
          lizard.setBackgroundX(stage1.backgroundX)
          lizard.setPlayerState( player.state )
@@ -150,25 +152,28 @@ def update():
     portal.setBackgroundX(stage1.backgroundX)
     
     scroll()
+    collision()
     
 
 
 
 def draw():
-    global stage1, player, yetiList, lizard, portal
+    global stage1, player, yetiList, lizardList, portal, yetiCount, lizardCount
 
     clear_canvas()
     stage1.draw()
     ui.draw()
     ui.setPlayerHp(player.hp, player.maxHp)
-    if( lizardList):
+    
+    player.draw()
+    
+    if( lizardCount > 0 ):
      for lizard in lizardList:
           lizard.draw()
-   
-     player.draw()
     
-    for yeti in yetiList:
-        yeti.draw()
+    if( yetiCount > 0 ):
+     for yeti in yetiList:
+         yeti.draw()
     
     portal.draw()
     
@@ -189,73 +194,27 @@ def scroll():
                 stage1.backgroundX -= 5
 
 # ----------------
-def collide():
+def collide(a, b):
 # ----------------
-    left_a, bottom_a, right_a, top_a = a.get_bb()
-    left_b, bottom_b, right_b, top_b = a.get_bb()
+    left_a, top_a, right_a, bottom_a = a.get_bb()
+    left_b, top_b, right_b, bottom_b = b.get_bb()
 
     if left_a > right_b: return False
-    if right_a > left_b: return False
-    if top_a > bottom_b: return False
-    if bottom_a > top_b: return False
-
+    if right_a < left_b: return False
     return True
 
 # ----------------
 def collision():
 # ----------------
-    if collide(door, player):
-        Game_FrameWork.change_state(Stage2_State)
-        return
+    global yetiCount, lizardList, yetiList, lizardCount, player
 
-    for monster in monsterList:
-        if collide(monster, player):
-            if player.state == player.SLIDE:
-                if monster.state != monster.HIT:
-                    monster.soundList[monster.HIT].play()
-                    monster.state = monster.HIT
-                    monster.frame = 0
-                    monster.hp -= player.att
-
-            if player.state == player.WINDMIL:
-                if monster.state != monster.HIT and monster.state != monster.DIE:
-                    monster.soundList[monster.HIT].play()
-                    monster.state = monster.HIT
-                    monster.frame = 0
-                    monster.hp -= 250
-
-            if player.state == player.KICK:
-                if monster.state != monster.HIT and monster.state != monster.DIE:
-                    monster.soundList[monster.HIT].play()
-                    monster.state = monster.HIT
-                    monster.frame = 0
-                    monster.hp -= 300
-
-            if player.state == player.NANSA:
-                if monster.state != monster.HIT and monster.state != monster.DIE:
-                    monster.soundList[monster.HIT].play()
-                    monster.state = monster.HIT
-                    monster.frame = 0
-                    monster.hp -= 600
-
-        for bullet in player.bulletList:
-            if collide(bullet, monster):
-                if monster.state != monster.HIT and monster.state != monster.DIE:
-                    monster.soundList[monster.HIT].play()
-                    monster.state = monster.HIT
-                    monster.frame = 0
-                    monster.hp -= player.att
-                    
-
-    for monster in monsterList:
-        if monster.state == monster.DIE and monster.frame == monster.frameNum[monster.DIE] - 1:
-            monsterList.remove(monster)
-
-        if monster.state != monster.DIE and monster.hp <= 0:
-            monster.frame = 0
-            monster.state = monster.DIE
-
-
-
-
-
+    if (lizardCount == 0):
+        for yeti in yetiList:
+            if( yeti.state != yeti.ATTACK and collide(player, yeti) ):
+                yeti.state = yeti.ATTACK
+                yeti.frame = 0
+            elif( yeti.state == yeti.ATTACK and collide(player, yeti) and yeti.frame == yeti.frameNum[yeti.ATTACK] - 1):
+                player.hp -= yeti.att
+                print(player.hp)
+            elif( yeti.state == yeti.ATTACK and True != collide(player, yeti) ):
+                yeti.state = yeti.RUN
