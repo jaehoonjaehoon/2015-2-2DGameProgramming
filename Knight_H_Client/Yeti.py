@@ -51,8 +51,6 @@ class Yeti:
     def update(self):
     # ----------------
         self.frameRate()
-        #if self.state != self.DIE:
-            #self.moveToPlayer()
         self.move()
 
     # ----------------
@@ -85,7 +83,7 @@ class Yeti:
     # ----------------
     def move(self):
     # ----------------
-        if self.state != self.ATTACK and self.x > 10:
+        if self.state != self.ATTACK and self.x > 10 and self.state != self.DIE:
             self.x -= 2
     # ----------------
     def get_bb(self):

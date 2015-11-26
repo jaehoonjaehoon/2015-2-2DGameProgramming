@@ -27,7 +27,7 @@ class Yeti:
 
         self.frametime = { self.STAND : 0.1,
                           self.RUN : 0.2,
-                          self.ATTACK : 0.5,
+                          self.ATTACK : 0.05,
                           self.HIT : 0.3,
                           self.DIE : 0.3 }
 
@@ -38,8 +38,8 @@ class Yeti:
 
         self.currentTime = time.time()
 
-        self.hp = 5000
-        self.att = 5
+        self.hp = 1200
+        self.att = 150
 
         self.playerX = 0
         self.playerY = 0
