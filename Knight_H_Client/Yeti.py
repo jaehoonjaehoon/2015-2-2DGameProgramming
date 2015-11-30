@@ -37,7 +37,7 @@ class Yeti:
         self.x, self.y = random.randint(400, 1100), random.randint(150, 300)
 
         self.currentTime = time.time()
-
+        self.backgroundX = 0
         self.hp = 5000
         self.att = 5
 

@@ -1,4 +1,4 @@
-﻿import random
+import random
 import json
 import os
 
@@ -9,15 +9,12 @@ from UI import UI
 from Lizard import Lizard
 from Portal import Portal
 import Game_FrameWork
-import Title_State
-import Stage2_State
 
 
 
+name = "Stage2"
 
-name = "Stage1"
-
-stage1 = None
+stage2 = None
 player = None
 font = None
 
@@ -40,10 +37,10 @@ gemumuButton = False
 wizardButton = False
 
 
-class Stage1:
+class Stage2:
 
     def __init__(self):
-        self.image = load_image('Stage1(1125x600).png')
+        self.image = load_image('Stage2(1125x600).png')
         self.backgroundX = 0
 
     def draw(self):
@@ -54,8 +51,8 @@ class Stage1:
 
         
 def enter():
-    global stage1, player, yetiList, ui, lizard, portal, yetiCount
-    stage1 = Stage1()
+    global stage2, player, yetiList, ui, lizard, portal, yetiCount
+    stage2 = Stage2()
     player = Player(340)
     lizard = Lizard(player.x)
     ui = UI()
@@ -66,8 +63,8 @@ def enter():
         yetiCount += 1
 
 def exit():
-    global stage1, player, portal, lizardList, yetiList
-    del(stage1)
+    global stage2, player, portal, lizardList, yetiList
+    del(stage2)
     del(player)
     del(portal)
     for lizard in lizardList:
@@ -94,7 +91,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             Game_FrameWork.quit()
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
-               Game_FrameWork.change_state(Title_State)
+               Game_FrameWork.change_state(Stage1_State)
         elif (event.type) == SDL_MOUSEMOTION:
               if( 87 <= event.x and event.x <= 113 and 18 <= 600 - event.y and 600 - event.y <= 58):
                  if(player.mp - lizardMpValue > 0):
@@ -120,7 +117,6 @@ def handle_events():
               if( 87 <= event.x and event.x <= 113 and 18 <= 600 - event.y and 600 - event.y <= 58):
                  if(player.mp - lizardMpValue > 0):
                       lizardButton = True
-                      print("리자드를 소환하시겠습니까?")
                  else:
                      ui.LizardFrame = 54
         elif (event.type, event.button) == (SDL_MOUSEBUTTONUP, SDL_BUTTON_LEFT):
@@ -128,7 +124,6 @@ def handle_events():
                  if(player.mp - lizardMpValue > 0):
                       lizardButton = False
                       lizardList.append(Lizard(player.x))
-                      print("리자드를 소환 합니다")
                       lizardCount += 1
                       player.mp -= lizardMpValue
                  
@@ -137,25 +132,25 @@ def handle_events():
            player.handle_events(event)
 
 def update():
-    global player, yetiList, lizardList, stage1, portal, yetiCount, lizardCount
+    global player, yetiList, lizardList, stage2, portal, yetiCount, lizardCount
     
     player.update()
-    player.setBackgroundX(stage1.backgroundX)
+    player.setBackgroundX(stage2.backgroundX)
     
     if( yetiCount > 0 ):
      for yeti in yetiList:
          yeti.update()
-         yeti.setBackgroundX(stage1.backgroundX)
-         yeti.setPlayerPos(player.x + stage1.backgroundX, player.y)
+         yeti.setBackgroundX(stage2.backgroundX)
+         yeti.setPlayerPos(player.x + stage2.backgroundX, player.y)
 
     
     if( lizardCount > 0 ):
      for lizard in lizardList:
-         lizard.setBackgroundX(stage1.backgroundX)
+         lizard.setBackgroundX(stage2.backgroundX)
          lizard.setPlayerState( player.state )
          #lizard.setMonsterX( yeti.x )
          lizard.update()
-    portal.setBackgroundX(stage1.backgroundX)
+    portal.setBackgroundX(stage2.backgroundX)
     
     scroll()
     collision()
@@ -164,10 +159,10 @@ def update():
 
 
 def draw():
-    global stage1, player, yetiList, lizardList, portal, yetiCount, lizardCount
+    global stage2, player, yetiList, lizardList, portal, yetiCount, lizardCount
 
     clear_canvas()
-    stage1.draw()
+    stage2.draw()
     ui.draw()
     ui.setPlayerHp(player.hp, player.maxHp)
     
@@ -189,15 +184,15 @@ def draw():
 # ----------------
 def scroll():
 # ----------------
-    global stage1, player
+    global stage2, player
 
     if player.state == player.WALK:
         if player.x >= 640:
-            if stage1.backgroundX < 340:
-                stage1.backgroundX += 5
+            if stage2.backgroundX < 340:
+                stage2.backgroundX += 5
         elif player.x <= 150:
-            if stage1.backgroundX >= 20:
-                stage1.backgroundX -= 5
+            if stage2.backgroundX >= 20:
+                stage2.backgroundX -= 5
 
 # ----------------
 def collide(a, b):
@@ -212,11 +207,7 @@ def collide(a, b):
 # ----------------
 def collision():
 # ----------------
-    global yetiCount, lizardList, yetiList, lizardCount, player, portal
-    
-    if collide(portal, player):
-        Game_FrameWork.change_state(Stage2_State)
-        return
+    global yetiCount, lizardList, yetiList, lizardCount, player
 
     if (lizardCount == 0):
         for yeti in yetiList:
@@ -237,29 +228,24 @@ def collision():
                          yeti.frame = 0
                     elif( yeti.state == yeti.ATTACK and yeti.frame == yeti.frameNum[yeti.ATTACK]-1 ):
                         lizard.hp -= yeti.att
-                        print("lizard의 HP : ", lizard.hp)
                         if( lizard.hp <= 0 and lizard.state == lizard.DIE and lizard.frame == lizard.frameNum[lizard.DIE]-1):
                             lizardList.remove(lizard)
                             lizardCount -= 1
-                            print("리자드뒤짐ㅋ")
                         elif( lizard.hp <= 0 and lizard.state != lizard.DIE):
                             lizard.state = lizard.DIE
                             lizard.frame = 0
-                            print("리자드뒤지기시작ㅋ")
 
                     if( lizard.state == lizard.RUN):
                          lizard.state = lizard.ATTACK
                          lizard.frame = 0
                     elif( lizard.state == lizard.ATTACK and lizard.frame == lizard.frameNum[lizard.ATTACK]-1  ):
                         yeti.hp -= lizard.att
-                        #print("yeti의 HP : ", yeti.hp)
+                        #print("yeti�� HP : ", yeti.hp)
                         if( yeti.hp <= 0 and yeti.state == yeti.DIE and yeti.frame == yeti.frameNum[yeti.DIE]-1):
                             yetiCount -= 1
-                            print("예티뒤짐ㅋ")
                         elif( yeti.hp <= 0 and yeti.state != yeti.DIE):
                             yeti.state = yeti.DIE
                             yeti.frame = 0
-                            print("예티뒤지기시작ㅋ")
     elif(yetiCount <= 0):
         for lizard in lizardList:
             lizard.state = lizard.RUN
