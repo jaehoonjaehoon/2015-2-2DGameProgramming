@@ -47,6 +47,9 @@
     <Compile Include="Stage2_State.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Stage3_State.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Title_State.py" />
     <Compile Include="UI.py">
       <SubType>Code</SubType>
