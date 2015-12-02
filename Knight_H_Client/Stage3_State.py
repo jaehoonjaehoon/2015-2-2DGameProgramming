@@ -18,6 +18,8 @@ name = "Stage3"
 stage3 = None
 player = None
 font = None
+stage3Bgm = None
+
 
 
 yetiCount = 0
@@ -28,6 +30,8 @@ lizardList = []
 ui = None
 lizard = None
 portal = None
+
+
 
 lizardMpValue = 50
 gemumuMpValue = 100
@@ -52,22 +56,27 @@ class Stage3:
 
         
 def enter():
-    global stage3, player, yetiList, ui, lizard, portal, yetiCount
+    global stage3, player, yetiList, ui, lizard, portal, yetiCount, stage3Bgm
     stage3 = Stage3()
     player = Player(340)
     lizard = Lizard(player.x)
     ui = UI()
     portal = Portal(1125, 200)
 
+    stage3Bgm = load_music('stage3Bgm.mp3')
+    stage3Bgm.set_volume(100)
+    stage3Bgm.repeat_play()
+
     for i in range(0, 15):
         yetiList.append(Yeti())
         yetiCount += 1
 
 def exit():
-    global stage3, player, portal, lizardList, yetiList
+    global stage3, player, portal, lizardList, yetiList, stage3Bgm
     del(stage3)
     del(player)
     del(portal)
+    del(stage3Bgm)
     for lizard in lizardList:
         del(lizard)
     for yeti in yetiList:

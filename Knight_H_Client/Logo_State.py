@@ -6,17 +6,24 @@ from pico2d import *
 name = "LogoState"
 image = None
 logo_time = 0.0
+logoBgm = None
+
 
 def enter():
-    global image
+    global image, logoBgm
     open_canvas()
     image = load_image('Logo_State.png')
+
+    logoBgm = load_music('logoBgm.mp3')
+    logoBgm.set_volume(64)
+    logoBgm.repeat_play()
 
 
 
 def exit():
-   global image
+   global image, logoBgm
    del(image)
+   del(logoBgm)
    close_canvas()
 
 def update():
