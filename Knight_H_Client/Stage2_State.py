@@ -7,6 +7,7 @@ from Player import Player
 from Yeti import Yeti
 from UI import UI
 from Lizard import Lizard
+from Gemumu import Gemumu
 from Portal import Portal
 import Game_FrameWork
 import Stage1_State
@@ -24,6 +25,7 @@ yetiCount = 0
 lizardCount = 0
 yetiList = []
 lizardList = []
+gemumuList = []
 
 ui = None
 lizard = None
@@ -133,6 +135,7 @@ def handle_events():
                  if(player.mp - lizardMpValue > 0):
                       lizardButton = False
                       lizardList.append(Lizard(player.x))
+                      lizardList.append(Gemumu(player.x))
                       lizardCount += 1
                       player.mp -= lizardMpValue
                  

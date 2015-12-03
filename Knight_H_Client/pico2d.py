@@ -11,11 +11,7 @@ from sdl2.sdlmixer import *
 
 
 lattice_on = True
-audio_on = False
 
-
-def clamp(minimum, x, maximum):
-    return max(minimum, min(x, maximum))
 
 def delay(sec):
     SDL_Delay(int(sec*1000))
@@ -24,39 +20,20 @@ def get_time():
     return SDL_GetTicks() / 1000.0
 
 
-def get_canvas_width():
-    return canvas_width
-
-def get_canvas_height():
-    return canvas_height
-
-
-def open_canvas(w=int(800), h=int(600), sync=False):
+def open_canvas(w=800, h=600, sync=False):
     global window, renderer
     global canvas_width, canvas_height
     global debug_font
-    global audio_on
 
     canvas_width, canvas_height = w, h
-
-    # all the initialization needs to be check for working
     SDL_Init(SDL_INIT_EVERYTHING)
     IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP)
     TTF_Init()
 
-
     Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG)
-
-    ret = Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024)
-    if -1 == ret:
-        print('WARNING: Audio functions are disabled due to speaker or sound problems')
-    else:
-        audio_on = True
-
-
-    if audio_on:
-        Mix_Volume(-1, 128)
-        Mix_VolumeMusic(128)
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024)
+    Mix_Volume(-1, 128)
+    Mix_VolumeMusic(128)
 
 
     #SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 0);
@@ -76,7 +53,7 @@ def open_canvas(w=int(800), h=int(600), sync=False):
     update_canvas()
     clear_canvas()
     update_canvas()
-    debug_font = load_font('ConsolaMalgun.TTF', 16)
+    debug_font = load_font('CONSOLA.TTF', 20)
 
 def show_lattice():
     global lattice_on
@@ -91,11 +68,10 @@ def hide_lattice():
     update_canvas()
 
 def close_canvas():
-    if audio_on:
-        Mix_HaltMusic()
-        Mix_HaltChannel(-1)
-        Mix_CloseAudio()
-        Mix_Quit()
+    Mix_HaltMusic()
+    Mix_HaltChannel(-1)
+    Mix_CloseAudio()
+    Mix_Quit()
     TTF_Quit()
     IMG_Quit()
     SDL_DestroyRenderer(renderer)
@@ -149,7 +125,7 @@ def print_fps():
 def debug_print(str):
     global canvas_height
     global debug_font
-    debug_font.draw(0, canvas_height - 10, str, (0,255,0))
+    debug_font.draw(0, canvas_height - 10, str)
 
 class Event:
     """Pico2D Event Class"""
@@ -286,17 +262,6 @@ class Font:
         image.draw(x+image.w/2, y)
 
 
-    # unicode rendering not working well at the moment, needs to modify
-    def draw_unicode(self, x, y, str, color=(0,0,0)):
-        sdl_color = SDL_Color(color[0], color[1], color[2])
-        surface = TTF_RenderUNICODE_Blended(self.font, ctypes.cast(str.encode('utf-16'), ctypes.POINTER(ctypes.c_uint16)), sdl_color)
-        texture = SDL_CreateTextureFromSurface(renderer, surface)
-        SDL_FreeSurface(surface)
-        image = Image(texture)
-        image.draw(x+image.w/2, y)
-
-
-
 def load_font(name, size = 20):
     font = Font(name, size)
     return font
@@ -358,29 +323,21 @@ class Wav:
 
 
 def load_music(name):
-    if audio_on:
-        data = Mix_LoadMUS(name.encode('UTF-8'))
-        if (not data):
-            print('cannot load %s' % name)
-            raise IOError
-
-        return Music(data)
-    else:
-        print('audio fuctions cannot work due to sound or speaker problems')
+    data = Mix_LoadMUS(name.encode('UTF-8'))
+    if (not data):
+        print('cannot load %s' % name)
         raise IOError
+
+    return Music(data)
 
 
 def load_wav(name):
-    if audio_on:
-        data = Mix_LoadWAV(name.encode('UTF-8'))
-        if (not data):
-            print('cannot load %s' % name)
-            raise IOError
-
-        return Wav(data)
-    else:
-        print('audio fuctions cannot work due to sound or speaker problems')
+    data = Mix_LoadWAV(name.encode('UTF-8'))
+    if (not data):
+        print('cannot load %s' % name)
         raise IOError
+
+    return Wav(data)
 
 
 

@@ -1,13 +1,12 @@
-﻿from pico2d import *
+from pico2d import *
 
 import time
 import random
 
-class Lizard:
+class Gemumu:
    
-    LizardImage = None
+    GemumuImage = None
 
-    STAND = 3
     RUN = 2
     ATTACK = 1
     DIE = 0
@@ -15,15 +14,15 @@ class Lizard:
     # ----------------
     def __init__(self, playerX):
     # ----------------
-        if Lizard.LizardImage == None:
-           Lizard.LizardImage = load_image("Lizard.png")
+        if Gemumu.GemumuImage == None:
+           Gemumu.GemumuImage = load_image("Gemumu.png")
 
-        self.frameNum = { self.STAND : 4,
-                      self.RUN : 4,
-                      self.ATTACK : 5,
-                      self.DIE : 3 }
+        self.frameNum = {
+                      self.RUN : 6,
+                      self.ATTACK : 6,
+                      self.DIE : 4 }
 
-        self.frametime = { self.STAND : 0.1,
+        self.frametime = { 
                           self.RUN : 0.4,
                           self.ATTACK : 0.5,
                           self.DIE : 0.3 }
@@ -35,19 +34,17 @@ class Lizard:
 
         self.currentTime = time.time()
 
-        self.maxHp = 1500
-        self.hp = 7000
-        self.att = 3
+        self.maxHp = 4000
+        self.hp = 4000
+        self.att = 10
 
-        self.monsterX = 0
-        self.monsterY = 0
         self.scrollX = 0
 
     # ----------------
     def update(self):
     # ----------------
         self.frameRate()
-        if self.state != self.STAND:
+        if self.state != self.DIE:
             self.move()
         self.motion()
         
@@ -55,8 +52,8 @@ class Lizard:
     # ----------------
     def draw(self):
     # ----------------
-        self.LizardImage.clip_draw(100 * self.frame, (100 * self.state), 
-                                    100, 100, self.x - self.backgroundX, self.y)
+        self.GemumuImage.clip_draw(200 * self.frame, (200 * self.state), 
+                                    200, 200, self.x - self.backgroundX, self.y)
         self.draw_bb()
     # ----------------
     def setPlayerState(self, state):
@@ -80,10 +77,7 @@ class Lizard:
             self.currentTime = time.time()
             self.frame = int(self.frame + 1) % self.frameNum[self.state]
 
-        #if self.state != self.DIE:
-        #    if self.frame == self.frameNum[self.state] - 1:
-        #        self.state = self.STAND
-        #        self.frame = 0
+        
       
     # ----------------
     def move(self):
@@ -99,7 +93,7 @@ class Lizard:
     # ----------------
     def get_bb(self):
     # ----------------
-        return self.x - 50 - self.backgroundX, self.y - 50, self.x + 50 - self.backgroundX, self.y + 50
+        return self.x - 150 - self.backgroundX, self.y - 150, self.x + 150 - self.backgroundX, self.y + 150
     # ----------------
     def draw_bb(self):
     # ----------------
