@@ -31,9 +31,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Game_FrameWork.py" />
-    <Compile Include="Gemumu.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Knight H_Client.py" />
     <Compile Include="Lizard.py">
       <SubType>Code</SubType>
@@ -46,21 +43,9 @@
     <Compile Include="Portal.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="setup.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Stage1_State.py" />
-    <Compile Include="Stage2_State.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Stage3_State.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Title_State.py" />
     <Compile Include="UI.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Magician.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Yeti.py">

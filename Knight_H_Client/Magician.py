@@ -1,4 +1,4 @@
-from pico2d import *
+﻿from pico2d import *
 
 import time
 import random
@@ -7,7 +7,7 @@ class Magician:
    
     MagicianImage = None
 
-    STAND = 3
+    
     RUN = 2
     ATTACK = 1
     DIE = 0
@@ -16,14 +16,14 @@ class Magician:
     def __init__(self, playerX):
     # ----------------
         if Magician.MagicianImage == None:
-           Magician.MagicianImage = load_image("Lizard.png")
+           Magician.MagicianImage = load_image("Magician.png")
 
-        self.frameNum = { self.STAND : 4,
+        self.frameNum = { 
                       self.RUN : 4,
                       self.ATTACK : 5,
                       self.DIE : 3 }
 
-        self.frametime = { self.STAND : 0.1,
+        self.frametime = { 
                           self.RUN : 0.4,
                           self.ATTACK : 0.5,
                           self.DIE : 0.3 }
@@ -35,9 +35,9 @@ class Magician:
 
         self.currentTime = time.time()
 
-        self.maxHp = 1500
-        self.hp = 7000
-        self.att = 3
+        self.maxHp = 2500
+        self.hp = 2500
+        self.att = 50
 
         self.monsterX = 0
         self.monsterY = 0
@@ -47,7 +47,7 @@ class Magician:
     def update(self):
     # ----------------
         self.frameRate()
-        if self.state != self.STAND:
+        if self.state != self.DIE:
             self.move()
         self.motion()
         
@@ -80,11 +80,7 @@ class Magician:
             self.currentTime = time.time()
             self.frame = int(self.frame + 1) % self.frameNum[self.state]
 
-        #if self.state != self.DIE:
-        #    if self.frame == self.frameNum[self.state] - 1:
-        #        self.state = self.STAND
-        #        self.frame = 0
-      
+     
     # ----------------
     def move(self):
     # ----------------

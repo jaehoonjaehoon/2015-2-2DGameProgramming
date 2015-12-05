@@ -34,11 +34,11 @@ stage1Bgm = None
 
 lizardMpValue = 50
 gemumuMpValue = 100
-wizardMpValue = 200
+magicianMpValue = 200
 
 lizardButton = False
 gemumuButton = False
-wizardButton = False
+magicianButton = False
 
 
 class Stage1:
@@ -92,7 +92,7 @@ def resume():
 
 
 def handle_events():
-    global player, UI, lizardMpValue, gemumuMpValue, wizardMpValue, lizardList, lizardButton, lizardCount
+    global player, UI, lizardMpValue, gemumuMpValue, magicianMpValue, lizardList, lizardButton, lizardCount
 
     events = get_events()
 
@@ -102,42 +102,61 @@ def handle_events():
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                Game_FrameWork.change_state(Title_State)
         elif (event.type) == SDL_MOUSEMOTION:
-              if( 87 <= event.x and event.x <= 113 and 18 <= 600 - event.y and 600 - event.y <= 58):
+              if(87 <= event.x and event.x <= 113 and 18 <= 600 - event.y and 600 - event.y <= 58):
                  if(player.mp - lizardMpValue > 0):
                       ui.LizardFrame = 27
                  else:
                      ui.LizardFrame = 54
-              elif( 117 <= event.x and event.x <= 143 and 18 <= 600 - event.y and 600 - event.y <= 58):
+              elif(117 <= event.x and event.x <= 143 and 18 <= 600 - event.y and 600 - event.y <= 58):
                  if(player.mp - gemumuMpValue > 0):
                       ui.GemumuFrame = 27
                  else:
                      ui.GemumuFrame = 54
-              elif( 147 <= event.x and event.x <= 173 and 18 <= 600 - event.y and 600 - event.y <= 58):
-                 if(player.mp - wizardMpValue > 0):
-                      ui.WizardFrame = 27
+              elif(147 <= event.x and event.x <= 173 and 18 <= 600 - event.y and 600 - event.y <= 58):
+                 if(player.mp - magicianMpValue > 0):
+                      ui.MagicianFrame = 27
                  else:
-                     ui.WizardFrame = 54
+                     ui.Magician = 54
               else:
                   ui.LizardFrame = 0
                   ui.GemumuFrame = 0
-                  ui.WizardFrame = 0
-
+                  ui.MagicianFrame = 0
+        
+         #UI 위에 마우스를 올려놓은상태에서 왼쪽 버튼을 DOWN 했을경우
         elif (event.type, event.button) == (SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT):
-              if( 87 <= event.x and event.x <= 113 and 18 <= 600 - event.y and 600 - event.y <= 58):
+              if(87 <= event.x and event.x <= 113 and 18 <= 600 - event.y and 600 - event.y <= 58):
                  if(player.mp - lizardMpValue > 0):
                       lizardButton = True
-                      print("리자드를 소환하시겠습니까?")
                  else:
                      ui.LizardFrame = 54
+              elif(117 <= event.x and event.x <= 143 and 18 <= 600 - event.y and 600 - event.y <= 58):
+                 if(player.mp - gemumuMpValue > 0):
+                      gemumuButton = True
+                 else:
+                     ui.GemumuFrame = 54
+              elif(147 <= event.x and event.x <= 173 and 18 <= 600 - event.y and 600 - event.y <= 58):
+                 if(player.mp - magicianMpValue > 0):
+                      magicianButton = True
+                 else:
+                     ui.MagicianFrame = 54
+
         elif (event.type, event.button) == (SDL_MOUSEBUTTONUP, SDL_BUTTON_LEFT):
-              if( 87 <= event.x and event.x <= 113 and 18 <= 600 - event.y and 600 - event.y <= 58):
+              if(87 <= event.x and event.x <= 113 and 18 <= 600 - event.y and 600 - event.y <= 58):
                  if(player.mp - lizardMpValue > 0):
                       lizardButton = False
                       lizardList.append(Lizard(player.x))
-                      print("리자드를 소환 합니다")
                       lizardCount += 1
                       player.mp -= lizardMpValue
-                 
+              elif(117 <= event.x and event.x <= 143 and 18 <= 600 - event.y and 600 - event.y <= 58):
+                  if(player.mp - gemumuMpValue > 0):
+                      gemumuButton = False
+                      lizardList.append(Gemumu(player.x))
+                      player.mp -= gemumuMpValue
+              elif(147 <= event.x and event.x <= 173 and 18 <= 600 - event.y and 600 - event.y <= 58):
+                  if(player.mp - magicianMpValue > 0):
+                      magicianButton = False
+                      lizardList.append(Magician(player.x))
+                      player.mp -= magicianMpValue
                                
         else:
            player.handle_events(event)
@@ -247,11 +266,9 @@ def collision():
                         if( lizard.hp <= 0 and lizard.state == lizard.DIE and lizard.frame == lizard.frameNum[lizard.DIE]-1):
                             lizardList.remove(lizard)
                             lizardCount -= 1
-                            print("리자드뒤짐ㅋ")
                         elif( lizard.hp <= 0 and lizard.state != lizard.DIE):
                             lizard.state = lizard.DIE
                             lizard.frame = 0
-                            print("리자드뒤지기시작ㅋ")
 
                     if( lizard.state == lizard.RUN):
                          lizard.state = lizard.ATTACK
@@ -261,11 +278,9 @@ def collision():
                         #print("yeti의 HP : ", yeti.hp)
                         if( yeti.hp <= 0 and yeti.state == yeti.DIE and yeti.frame == yeti.frameNum[yeti.DIE]-1):
                             yetiCount -= 1
-                            print("예티뒤짐ㅋ")
                         elif( yeti.hp <= 0 and yeti.state != yeti.DIE):
                             yeti.state = yeti.DIE
                             yeti.frame = 0
-                            print("예티뒤지기시작ㅋ")
     elif(yetiCount <= 0):
         for lizard in lizardList:
             lizard.state = lizard.RUN

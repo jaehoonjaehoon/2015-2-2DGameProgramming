@@ -8,6 +8,7 @@ from Yeti import Yeti
 from UI import UI
 from Lizard import Lizard
 from Gemumu import Gemumu
+from Magician import Magician
 from Portal import Portal
 import Game_FrameWork
 import Stage1_State
@@ -35,11 +36,11 @@ stage2Bgm = None
 
 lizardMpValue = 50
 gemumuMpValue = 100
-wizardMpValue = 200
+magicianMpValue = 200
 
 lizardButton = False
 gemumuButton = False
-wizardButton = False
+magicianButton = False
 
 
 
@@ -94,7 +95,7 @@ def resume():
 
 
 def handle_events():
-    global player, UI, lizardMpValue, gemumuMpValue, wizardMpValue, lizardList, lizardButton, lizardCount
+    global player, UI, lizardMpValue, gemumuMpValue, magicianMpValue, lizardList, lizardButton, lizardCount
 
     events = get_events()
 
@@ -115,14 +116,14 @@ def handle_events():
                  else:
                      ui.GemumuFrame = 54
               elif( 147 <= event.x and event.x <= 173 and 18 <= 600 - event.y and 600 - event.y <= 58):
-                 if(player.mp - wizardMpValue > 0):
-                      ui.WizardFrame = 27
+                 if(player.mp - magicianMpValue > 0):
+                      ui.MagicianFrame = 27
                  else:
-                     ui.WizardFrame = 54
+                     ui.MagicianFrame = 54
               else:
                   ui.LizardFrame = 0
                   ui.GemumuFrame = 0
-                  ui.WizardFrame = 0
+                  ui.MagicianFrame = 0
 
         elif (event.type, event.button) == (SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT):
               if( 87 <= event.x and event.x <= 113 and 18 <= 600 - event.y and 600 - event.y <= 58):
@@ -136,6 +137,7 @@ def handle_events():
                       lizardButton = False
                       lizardList.append(Lizard(player.x))
                       lizardList.append(Gemumu(player.x))
+                      lizardList.append(Magician(player.x))
                       lizardCount += 1
                       player.mp -= lizardMpValue
                  

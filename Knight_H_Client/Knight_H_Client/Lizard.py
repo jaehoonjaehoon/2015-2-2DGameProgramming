@@ -3,10 +3,11 @@
 import time
 import random
 
-class Gemumu:
+class Lizard:
    
-    GemumuImage = None
+    LizardJImage = None
 
+    STAND = 3
     RUN = 2
     ATTACK = 1
     DIE = 0
@@ -14,17 +15,17 @@ class Gemumu:
     # ----------------
     def __init__(self, playerX):
     # ----------------
-        if Gemumu.GemumuImage == None:
-           Gemumu.GemumuImage = load_image("Gemumu.png")
+        if Lizard.LizardJImage == None:
+           Lizard.LizardJImage = load_image("KnightJ.png")
 
-        self.frameNum = {
-                      self.RUN : 6,
-                      self.ATTACK : 6,
-                      self.DIE : 4 }
+        self.frameNum = { self.STAND : 4,
+                      self.RUN : 4,
+                      self.ATTACK : 5,
+                      self.DIE : 3 }
 
-        self.frametime = { 
+        self.frametime = { self.STAND : 0.1,
                           self.RUN : 0.4,
-                          self.ATTACK : 0.5,
+                          self.ATTACK : 0.2,
                           self.DIE : 0.3 }
 
         self.state = self.RUN
@@ -34,17 +35,19 @@ class Gemumu:
 
         self.currentTime = time.time()
 
-        self.maxHp = 4000
-        self.hp = 4000
-        self.att = 10
+        self.maxHp = 1500
+        self.hp = 1500
+        self.att = 200
 
+        self.monsterX = 0
+        self.monsterY = 0
         self.scrollX = 0
 
     # ----------------
     def update(self):
     # ----------------
         self.frameRate()
-        if self.state != self.DIE:
+        if self.state != self.STAND:
             self.move()
         self.motion()
         
@@ -52,15 +55,16 @@ class Gemumu:
     # ----------------
     def draw(self):
     # ----------------
-        self.GemumuImage.clip_draw(200 * self.frame, (200 * self.state), 
-                                    200, 200, self.x - self.backgroundX, self.y)
+        self.LizardJImage.clip_draw(100 * self.frame, (100 * self.state), 
+                                    100, 100, self.x - self.backgroundX, self.y)
         self.draw_bb()
     # ----------------
     def setPlayerState(self, state):
     # ----------------
-        
+        #if state == 0 or state == 1:
+        #    self.state = self.RUN
         if state == 2:
-            self.state = self.DIE
+            self.state = self.STAND
     # ----------------
     def setBackgroundX(self, x):
     # ----------------
@@ -77,13 +81,16 @@ class Gemumu:
             self.currentTime = time.time()
             self.frame = int(self.frame + 1) % self.frameNum[self.state]
 
-        
+        #if self.state != self.DIE:
+        #    if self.frame == self.frameNum[self.state] - 1:
+        #        self.state = self.STAND
+        #        self.frame = 0
       
     # ----------------
     def move(self):
     # ----------------
        if self.x < 1125 and self.state == self.RUN :
-          self.x += 2 
+          self.x += 5 
        
 
     # ----------------
@@ -93,7 +100,7 @@ class Gemumu:
     # ----------------
     def get_bb(self):
     # ----------------
-        return self.x - 150 - self.backgroundX, self.y - 150, self.x + 150 - self.backgroundX, self.y + 150
+        return self.x - 50 - self.backgroundX, self.y - 50, self.x + 50 - self.backgroundX, self.y + 50
     # ----------------
     def draw_bb(self):
     # ----------------
