@@ -39,7 +39,7 @@ class Yeti:
         self.currentTime = time.time()
         self.backgroundX = 0
         self.hp = 5000
-        self.att = 5
+        self.att = 500
 
         self.playerX = 0
         self.playerY = 0

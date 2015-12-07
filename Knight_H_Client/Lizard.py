@@ -25,8 +25,17 @@ class Lizard:
 
         self.frametime = { self.STAND : 0.1,
                           self.RUN : 0.4,
-                          self.ATTACK : 0.5,
-                          self.DIE : 0.3 }
+                          self.ATTACK : 0.3,
+                          self.DIE : 0.5 }
+        self.attackSound = load_wav('LizardAttack.wav')
+        self.attackSound.set_volume(64)
+
+        self.dieSound = load_wav('LizardDie.wav')
+        self.dieSound.set_volume(64)
+
+        self.soundList = { self.ATTACK : self.attackSound,
+                          self.DIE : self.dieSound
+            }
 
         self.state = self.RUN
         self.frame = 0
@@ -36,8 +45,8 @@ class Lizard:
         self.currentTime = time.time()
 
         self.maxHp = 1500
-        self.hp = 7000
-        self.att = 3
+        self.hp = 3000
+        self.att = 300
 
         self.monsterX = 0
         self.monsterY = 0
@@ -95,7 +104,10 @@ class Lizard:
     # ----------------
     def motion(self):
     # ----------------
-       pass
+       if( self.state != self.RUN and self.frame == self.frameNum[self.state]-1):
+           self.soundList[self.state].play()
+          
+       
     # ----------------
     def get_bb(self):
     # ----------------

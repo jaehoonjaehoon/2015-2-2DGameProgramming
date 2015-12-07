@@ -7,6 +7,8 @@ from Player import Player
 from Yeti import Yeti
 from UI import UI
 from Lizard import Lizard
+from Gemumu import Gemumu
+from Magician import Magician
 from Portal import Portal
 import Game_FrameWork
 import Title_State
@@ -24,11 +26,15 @@ font = None
 
 yetiCount = 0
 lizardCount = 0
+gemumuCount = 0
+magicianCount = 0
+
 yetiList = []
 lizardList = []
+gemumuList = []
+magicianList = []
 
 ui = None
-lizard = None
 portal = None
 stage1Bgm = None
 
@@ -55,7 +61,7 @@ class Stage1:
 
         
 def enter():
-    global stage1, player, yetiList, ui, lizard, portal, yetiCount, stage1Bgm
+    global stage1, player, yetiList, ui, portal, yetiCount, stage1Bgm
     stage1 = Stage1()
     player = Player(340)
     lizard = Lizard(player.x)
@@ -66,18 +72,22 @@ def enter():
     stage1Bgm.set_volume(100)
     stage1Bgm.repeat_play()
 
-    for i in range(0, 10):
+    for i in range(0, 1):
         yetiList.append(Yeti())
         yetiCount += 1
 
 def exit():
-    global stage1, player, portal, lizardList, yetiList, stage1Bgm
+    global stage1, player, portal, lizardList, gemumuList, magicianList, yetiList, stage1Bgm
     del(stage1)
     del(player)
     del(portal)
     del(stage1Bgm)
     for lizard in lizardList:
         del(lizard)
+    for gemumu in gemumuList:
+        del(gemumu)
+    for magician in magicianList:
+        del(magician)
     for yeti in yetiList:
         del(yeti)
     
@@ -93,7 +103,7 @@ def resume():
 
 def handle_events():
     global player, UI, lizardMpValue, gemumuMpValue, magicianMpValue, lizardList, lizardButton, lizardCount
-
+    global gemumuList, magicianList, magicianButton, gemumuButton, gemumuCount, magicianCount
     events = get_events()
 
     for event in events:
@@ -150,19 +160,21 @@ def handle_events():
               elif(117 <= event.x and event.x <= 143 and 18 <= 600 - event.y and 600 - event.y <= 58):
                   if(player.mp - gemumuMpValue > 0):
                       gemumuButton = False
-                      lizardList.append(Gemumu(player.x))
+                      gemumuList.append(Gemumu(player.x))
+                      gemumuCount += 1
                       player.mp -= gemumuMpValue
               elif(147 <= event.x and event.x <= 173 and 18 <= 600 - event.y and 600 - event.y <= 58):
                   if(player.mp - magicianMpValue > 0):
                       magicianButton = False
-                      lizardList.append(Magician(player.x))
+                      magicianList.append(Magician(player.x))
+                      magicianCount += 1
                       player.mp -= magicianMpValue
                                
         else:
            player.handle_events(event)
 
 def update():
-    global player, yetiList, lizardList, stage1, portal, yetiCount, lizardCount
+    global player, yetiList, lizardList, stage1, portal, yetiCount, lizardCount, gemumuList, magicianList
     
     player.update()
     player.setBackgroundX(stage1.backgroundX)
@@ -178,8 +190,17 @@ def update():
      for lizard in lizardList:
          lizard.setBackgroundX(stage1.backgroundX)
          lizard.setPlayerState( player.state )
-         #lizard.setMonsterX( yeti.x )
          lizard.update()
+    if( magicianCount > 0):
+        for magician in magicianList:
+            magician.setBackgroundX(stage1.backgroundX)
+            magician.setPlayerState( player. state)
+            magician.update()
+    if( gemumuCount > 0):
+        for gemumu in gemumuList:
+            gemumu.setBackgroundX(stage1.backgroundX)
+            gemumu.setPlayerState( player. state)
+            gemumu.update()
     portal.setBackgroundX(stage1.backgroundX)
     
     scroll()
@@ -189,7 +210,7 @@ def update():
 
 
 def draw():
-    global stage1, player, yetiList, lizardList, portal, yetiCount, lizardCount
+    global stage1, player, yetiList, lizardList, portal, yetiCount, lizardCount, gemumuList, magicianList
 
     clear_canvas()
     stage1.draw()
@@ -201,7 +222,12 @@ def draw():
     if( lizardCount > 0 ):
      for lizard in lizardList:
           lizard.draw()
-    
+    if( gemumuCount > 0 ):
+     for gemumu in gemumuList:
+          gemumu.draw()
+    if( magicianCount > 0 ):
+     for magician in magicianList:
+          magician.draw()
     if( yetiCount > 0 ):
      for yeti in yetiList:
          yeti.draw()
@@ -237,22 +263,25 @@ def collide(a, b):
 # ----------------
 def collision():
 # ----------------
-    global yetiCount, lizardList, yetiList, lizardCount, player, portal
+    global yetiCount, lizardList, yetiList, lizardCount, player, portal, gemumuList, gemumuCount
+    global magicianCount, magicianList
     
     if collide(portal, player):
         Game_FrameWork.change_state(Stage2_State)
         return
 
-    if (lizardCount == 0):
+    if (lizardCount == 0 and gemumuCount == 0 and magicianCount == 0 ):
         for yeti in yetiList:
             if( yeti.state != yeti.ATTACK and collide(player, yeti) ):
                 yeti.state = yeti.ATTACK
                 yeti.frame = 0
             elif( yeti.state == yeti.ATTACK and collide(player, yeti) and yeti.frame == yeti.frameNum[yeti.ATTACK] - 1):
                 player.hp -= yeti.att
+                yeti.frame = 0
                 print(player.hp)
             elif( yeti.state == yeti.ATTACK and True != collide(player, yeti) ):
                 yeti.state = yeti.RUN
+                yeti.frame = 0
     elif ( lizardCount > 0 and yetiCount > 0 ):
         for yeti in yetiList:
             for lizard in lizardList:
@@ -262,10 +291,13 @@ def collision():
                          yeti.frame = 0
                     elif( yeti.state == yeti.ATTACK and yeti.frame == yeti.frameNum[yeti.ATTACK]-1 ):
                         lizard.hp -= yeti.att
+                        yeti.frame = 0
                         print("lizard의 HP : ", lizard.hp)
                         if( lizard.hp <= 0 and lizard.state == lizard.DIE and lizard.frame == lizard.frameNum[lizard.DIE]-1):
                             lizardList.remove(lizard)
+                            lizard.frame = 0
                             lizardCount -= 1
+
                         elif( lizard.hp <= 0 and lizard.state != lizard.DIE):
                             lizard.state = lizard.DIE
                             lizard.frame = 0
@@ -275,12 +307,18 @@ def collision():
                          lizard.frame = 0
                     elif( lizard.state == lizard.ATTACK and lizard.frame == lizard.frameNum[lizard.ATTACK]-1  ):
                         yeti.hp -= lizard.att
+                        lizard.frame = 0
                         #print("yeti의 HP : ", yeti.hp)
                         if( yeti.hp <= 0 and yeti.state == yeti.DIE and yeti.frame == yeti.frameNum[yeti.DIE]-1):
+                            yetiList.remove(yeti)
                             yetiCount -= 1
+                            yeti.frame = 0
+                            print("yeti.die ")
                         elif( yeti.hp <= 0 and yeti.state != yeti.DIE):
                             yeti.state = yeti.DIE
                             yeti.frame = 0
+                            print("yeti state -> die")
+
     elif(yetiCount <= 0):
         for lizard in lizardList:
             lizard.state = lizard.RUN
