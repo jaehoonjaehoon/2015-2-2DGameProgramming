@@ -38,7 +38,7 @@ class Yeti:
 
         self.currentTime = time.time()
         self.backgroundX = 0
-        self.hp = 5000
+        self.hp = 2000
         self.att = 500
 
         self.playerX = 0
@@ -47,11 +47,22 @@ class Yeti:
         self.mon = 0
         self.maxHp = 1200
 
+        self.attackSound = load_wav('YetiAttack.wav')
+        self.attackSound.set_volume(50)
+
+        self.dieSound = load_wav('YetiDie.wav')
+        self.dieSound.set_volume(50)
+
+        self.soundList = { self.ATTACK : self.attackSound,
+                          self.DIE : self.dieSound
+            }
+
     # ----------------
     def update(self):
     # ----------------
         self.frameRate()
         self.move()
+        self.motion()
 
     # ----------------
     def draw(self):
@@ -77,7 +88,11 @@ class Yeti:
         if time.time() - self.currentTime >= self.frametime[self.state]:
             self.currentTime = time.time()
             self.frame = int(self.frame + 1) % self.frameNum[self.state]
-
+    # ----------------
+    def motion(self):
+    # ----------------
+       if( self.state != self.RUN and self.frame == self.frameNum[self.state]-1):
+           self.soundList[self.state].play()
         
 
     # ----------------

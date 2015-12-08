@@ -45,8 +45,8 @@ class Lizard:
         self.currentTime = time.time()
 
         self.maxHp = 1500
-        self.hp = 3000
-        self.att = 300
+        self.hp = 1000
+        self.att = 500
 
         self.monsterX = 0
         self.monsterY = 0
@@ -106,7 +106,6 @@ class Lizard:
     # ----------------
        if( self.state != self.RUN and self.frame == self.frameNum[self.state]-1):
            self.soundList[self.state].play()
-          
        
     # ----------------
     def get_bb(self):

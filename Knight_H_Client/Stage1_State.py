@@ -72,7 +72,7 @@ def enter():
     stage1Bgm.set_volume(100)
     stage1Bgm.repeat_play()
 
-    for i in range(0, 1):
+    for i in range(0, 3):
         yetiList.append(Yeti())
         yetiCount += 1
 
@@ -272,7 +272,7 @@ def collision():
 
     if (lizardCount == 0 and gemumuCount == 0 and magicianCount == 0 ):
         for yeti in yetiList:
-            if( yeti.state != yeti.ATTACK and collide(player, yeti) ):
+            if( yeti.state != yeti.ATTACK and collide(player, yeti) and player.state != player.DIE ):
                 yeti.state = yeti.ATTACK
                 yeti.frame = 0
             elif( yeti.state == yeti.ATTACK and collide(player, yeti) and yeti.frame == yeti.frameNum[yeti.ATTACK] - 1):
@@ -282,6 +282,8 @@ def collision():
             elif( yeti.state == yeti.ATTACK and True != collide(player, yeti) ):
                 yeti.state = yeti.RUN
                 yeti.frame = 0
+
+
     elif ( lizardCount > 0 and yetiCount > 0 ):
         for yeti in yetiList:
             for lizard in lizardList:
@@ -289,37 +291,33 @@ def collision():
                     if( yeti.state == yeti.RUN):
                          yeti.state = yeti.ATTACK
                          yeti.frame = 0
-                    elif( yeti.state == yeti.ATTACK and yeti.frame == yeti.frameNum[yeti.ATTACK]-1 ):
-                        lizard.hp -= yeti.att
-                        yeti.frame = 0
-                        print("lizard의 HP : ", lizard.hp)
-                        if( lizard.hp <= 0 and lizard.state == lizard.DIE and lizard.frame == lizard.frameNum[lizard.DIE]-1):
-                            lizardList.remove(lizard)
-                            lizard.frame = 0
-                            lizardCount -= 1
-
-                        elif( lizard.hp <= 0 and lizard.state != lizard.DIE):
-                            lizard.state = lizard.DIE
-                            lizard.frame = 0
-
+                    elif( yeti.state == yeti.ATTACK):
+                        if( yeti.frame == yeti.frameNum[yeti.ATTACK]-1 and lizard.state != lizard.DIE):
+                            lizard.hp -= yeti.att
+                            yeti.frame = 0
+                            print( "lizard의 Hp : ",lizard.hp )
+                    if(lizard.hp <= 0):
+                        lizard.state = lizard.DIE
+                    elif( yeti.state == yeti.DIE and yeti.frame == yeti.frameNum[yeti.DIE]-1):
+                            yeti.frame = 0
+                            yetiCount -= 1
+                            yetiList.remove(yeti)                          
                     if( lizard.state == lizard.RUN):
                          lizard.state = lizard.ATTACK
-                         lizard.frame = 0
-                    elif( lizard.state == lizard.ATTACK and lizard.frame == lizard.frameNum[lizard.ATTACK]-1  ):
-                        yeti.hp -= lizard.att
-                        lizard.frame = 0
-                        #print("yeti의 HP : ", yeti.hp)
-                        if( yeti.hp <= 0 and yeti.state == yeti.DIE and yeti.frame == yeti.frameNum[yeti.DIE]-1):
-                            yetiList.remove(yeti)
-                            yetiCount -= 1
-                            yeti.frame = 0
-                            print("yeti.die ")
-                        elif( yeti.hp <= 0 and yeti.state != yeti.DIE):
-                            yeti.state = yeti.DIE
-                            yeti.frame = 0
-                            print("yeti state -> die")
+                    elif( lizard.state == lizard.ATTACK):
+                        if( lizard.frame == lizard.frameNum[lizard.ATTACK]-1 and yeti.state != yeti.DIE):
+                            yeti.hp -= lizard.att
+                            lizard.frame = 0
+                            print( "yeti의 Hp", yeti.hp)
+                    if(yeti.hp <= 0):
+                           yeti.state = yeti.DIE
+                    elif( lizard.state == lizard.DIE and lizard.frame == lizard.frameNum[lizard.DIE]-1 ):
+                            lizardCount -= 1
+                            lizardList.remove(lizard)
+                elif( collide(lizard, yeti) == False):
+                       lizard.state = lizard.RUN
 
-    elif(yetiCount <= 0):
-        for lizard in lizardList:
-            lizard.state = lizard.RUN
+    elif ( yetiCount <= 0 ):  
+         for lizard in lizardList:
+             lizard.state = lizard.RUN
          
