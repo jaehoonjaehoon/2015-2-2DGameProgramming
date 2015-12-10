@@ -316,6 +316,7 @@ def collision():
                             lizardList.remove(lizard)
                 elif( collide(lizard, yeti) == False):
                        lizard.state = lizard.RUN
+                       yeti.state = yeti.RUN
 
     elif ( yetiCount <= 0 ):  
          for lizard in lizardList:
