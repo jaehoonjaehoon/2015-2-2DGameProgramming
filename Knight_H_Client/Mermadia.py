@@ -1,57 +1,53 @@
-﻿from pico2d import *
+from pico2d import *
 
 import time
 import random
 
-class Yeti:
+class Mermadia:
    
-    yetiImage = None
+    mermadiaImage = None
 
-    STAND = 4
-    RUN = 3
-    ATTACK = 2
-    HIT = 1
+    STAND = 2
+    RUN = 2
+    ATTACK = 1
     DIE = 0
 
     # ----------------
     def __init__(self):
     # ----------------
-        if Yeti.yetiImage == None:
-           Yeti.yetiImage = load_image("Yeti.png")
+        if Mermadia.mermadiaImage == None:
+           Mermadia.mermadiaImage = load_image("Mermadia.png")
 
-        self.frameNum = { self.STAND : 3,
-                      self.RUN : 4,
-                      self.ATTACK : 4,
-                      self.HIT : 2,
-                      self.DIE : 4 }
+        self.frameNum = { self.STAND : 5,
+                      self.RUN : 5,
+                      self.ATTACK : 7,
+                      self.DIE : 3 }
 
         self.frametime = { self.STAND : 0.1,
                           self.RUN : 0.2,
                           self.ATTACK : 0.5,
-                          self.HIT : 0.3,
                           self.DIE : 0.3 }
 
         self.state = self.STAND
         self.frame = 0
 
-        self.x, self.y = random.randint(800, 1100), random.randint(150, 300)
+        self.x, self.y = random.randint(400, 1100), random.randint(150, 300)
 
         self.currentTime = time.time()
-        self.runTime = time.time()
         self.backgroundX = 0
-        self.hp = 2000
-        self.att = 300
-        self.startCheck = 0
+        self.hp = 7000
+        self.att = 500
+
         self.playerX = 0
         self.playerY = 0
 
         self.mon = 0
-        self.maxHp = 2000
+        self.maxHp = 1200
 
-        self.attackSound = load_wav('YetiAttack.wav')
+        self.attackSound = load_wav('MermaidaAttack.wav')
         self.attackSound.set_volume(50)
 
-        self.dieSound = load_wav('YetiDie.wav')
+        self.dieSound = load_wav('MermaidaDie.wav')
         self.dieSound.set_volume(50)
 
         self.soundList = { self.ATTACK : self.attackSound,
@@ -68,8 +64,8 @@ class Yeti:
     # ----------------
     def draw(self):
     # ----------------
-        self.yetiImage.clip_draw(150 * self.frame, (150 * self.state), 
-                                        150, 150, self.x - self.backgroundX, self.y)
+        self.mermadiaImage.clip_draw(100 * self.frame, (100 * self.state), 
+                                        100, 100, self.x - self.backgroundX, self.y)
         self.draw_bb()
 
     # ----------------
@@ -92,14 +88,8 @@ class Yeti:
     # ----------------
     def motion(self):
     # ----------------
-       if( self.state == self.DIE or self.state == self.ATTACK and self.frame == self.frameNum[self.state]-2  ):
+       if( self.state == self.DIE or self.state == self.ATTACK and self.frame == self.frameNum[self.state]-1):
            self.soundList[self.state].play()
-
-       if( self.hp <= 0):
-           self.state = self.DIE
-       if time.time() - self.runTime >= 4.0 and self.startCheck == 0:
-           self.state = self.RUN
-           self.startCheck = 1
         
 
     # ----------------

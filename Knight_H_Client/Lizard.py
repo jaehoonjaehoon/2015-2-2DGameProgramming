@@ -43,10 +43,11 @@ class Lizard:
         self.x, self.y = playerX + 50 , random.randint(150, 250)
 
         self.currentTime = time.time()
+        self.attackTime = 0.0
 
-        self.maxHp = 1500
-        self.hp = 1000
-        self.att = 500
+        self.maxHp = 2000
+        self.hp = 2000
+        self.att = 50
 
         self.monsterX = 0
         self.monsterY = 0
@@ -89,10 +90,7 @@ class Lizard:
             self.currentTime = time.time()
             self.frame = int(self.frame + 1) % self.frameNum[self.state]
 
-        #if self.state != self.DIE:
-        #    if self.frame == self.frameNum[self.state] - 1:
-        #        self.state = self.STAND
-        #        self.frame = 0
+        
       
     # ----------------
     def move(self):
@@ -104,8 +102,11 @@ class Lizard:
     # ----------------
     def motion(self):
     # ----------------
-       if( self.state != self.RUN and self.frame == self.frameNum[self.state]-1):
+       if( self.state != self.RUN and self.frame == self.frameNum[self.state]-2):
            self.soundList[self.state].play()
+
+       if( self.hp <= 0):
+           self.state = self.DIE
        
     # ----------------
     def get_bb(self):

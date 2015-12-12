@@ -2,6 +2,8 @@
 import json
 import os
 
+import time
+
 from pico2d import *
 from Player import Player
 from Yeti import Yeti
@@ -10,6 +12,7 @@ from Lizard import Lizard
 from Gemumu import Gemumu
 from Magician import Magician
 from Portal import Portal
+from Mermadia import Mermadia
 import Game_FrameWork
 import Title_State
 import Stage2_State
@@ -28,6 +31,12 @@ yetiCount = 0
 lizardCount = 0
 gemumuCount = 0
 magicianCount = 0
+
+monsterZenTime = time.time()
+monsterMaxZen = 5
+monsterCurZen = 0
+
+yetiCol = 0
 
 yetiList = []
 lizardList = []
@@ -72,7 +81,7 @@ def enter():
     stage1Bgm.set_volume(100)
     stage1Bgm.repeat_play()
 
-    for i in range(0, 3):
+    for i in range(0, 10):
         yetiList.append(Yeti())
         yetiCount += 1
 
@@ -110,6 +119,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             Game_FrameWork.quit()
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
+               exit()
                Game_FrameWork.change_state(Title_State)
         elif (event.type) == SDL_MOUSEMOTION:
               if(87 <= event.x and event.x <= 113 and 18 <= 600 - event.y and 600 - event.y <= 58):
@@ -205,7 +215,8 @@ def update():
     
     scroll()
     collision()
-    
+    dieCheck()
+    stateCheck()
 
 
 
@@ -225,13 +236,12 @@ def draw():
     if( gemumuCount > 0 ):
      for gemumu in gemumuList:
           gemumu.draw()
-    if( magicianCount > 0 ):
-     for magician in magicianList:
-          magician.draw()
     if( yetiCount > 0 ):
      for yeti in yetiList:
          yeti.draw()
-    
+    if( magicianCount > 0 ):
+     for magician in magicianList:
+          magician.draw()
     portal.draw()
     
     update_canvas()
@@ -259,7 +269,123 @@ def collide(a, b):
     if left_a > right_b: return False
     if right_a < left_b: return False
     return True
+# ----------------
+def collideDefend(a, b):
+# ----------------
+    left_a, top_a, right_a, bottom_a = a.get_bb_defend()
+    left_b, top_b, right_b, bottom_b = b.get_bb()
 
+    if left_a > right_b: return False
+    if right_a < left_b: return False
+    return True
+def monsterZen():
+
+    global monsterZenTime, monsterMaxZen, monsterCurZen, yetiList, yetiCount
+
+    
+    if time.time() - monsterZenTime >= 8.0:
+       if(monsterMaxZen > monsterCurZen):
+           monsterZenTime = time.time()
+           yetiList.append(Yeti())
+           yetiCount += 1
+           monsterCurZen += 1
+# ----------------
+def stateCheck():
+# ----------------
+    global yetiCount, lizardList, yetiList, lizardCount, player, portal, gemumuList, gemumuCount
+    global magicianCount, magicianList
+    lizardToyeti = 0
+    gemumuToyeti = 0
+    magicianToyeti = 0
+    yetiCheck = 0
+
+    if(lizardCount > 0 and yetiCount > 0 ):
+        for yeti in yetiList:
+            for lizard in lizardList:
+                if(lizard.state == lizard.ATTACK and collide(yeti, lizard) == True):
+                    lizardToyeti += 1
+                 
+        for yeti in yetiList:
+            for lizard in lizardList:
+                if(lizard.state == lizard.ATTACK and collide(yeti, lizard) == False and lizardToyeti == 0):
+                    lizard.state = lizard.RUN
+
+    if(magicianCount > 0 and yetiCount > 0 ):
+        for yeti in yetiList:
+            for magician in magicianList:
+                if(magician.state == magician.ATTACK and collide(magician, yeti) == True):
+                    magicianToyeti += 1
+        for yeti in yetiList:
+            for magician in magicianList:
+                if(magician.state == magician.ATTACK and collide(magician, yeti) == False and magicianToyeti == 0):
+                    magician.state = magician.RUN 
+
+    if(gemumuCount > 0 and yetiCount > 0 ):
+        for yeti in yetiList:
+            for gemumu in gemumuList:
+                if(gemumu.state == gemumu.ATTACK and collide(gemumu, yeti) == True):
+                    gemumuToyeti += 1
+        for yeti in yetiList:
+            for gemumu in gemumuList:
+                if(gemumu.state == gemumu.ATTACK and collide(gemumu, yeti) == False and gemumuToyeti == 0):
+                    gemumu.state = gemumu.RUN  
+
+
+    if(gemumuCount > 0 or magicianCount > 0 or lizardCount > 0 and yetiCount > 0):
+        for yeti in yetiList:
+            for lizard in lizardList:
+                if(yeti.state == yeti.ATTACK and collide(lizard, yeti) == True):
+                    yetiCheck += 1
+        for yeti in yetiList:
+            for lizard in lizardList:
+                if(yeti.state == yeti.ATTACK and collide(lizard, yeti) == False and yetiCheck == 0 ):
+                    yeti.state = yeti.RUN  
+
+
+        for yeti in yetiList:
+            for magician in magicianList:
+                if(yeti.state == yeti.ATTACK and collideDefend(magician, yeti) == True):
+                    yetiCheck += 1                  
+        for yeti in yetiList:
+            for magician in magicianList:
+                if(yeti.state == yeti.ATTACK and collideDefend(magician, yeti) == False and yetiCheck == 0):
+                    yeti.state = yeti.RUN
+
+
+        for yeti in yetiList:
+            for gemumu in gemumuList:
+                if(yeti.state == yeti.ATTACK and collideDefend(gemumu, yeti) == True):
+                    yetiCheck += 1
+        for yeti in yetiList:
+            for gemumu in gemumuList:
+                if(yeti.state == yeti.ATTACK and collideDefend(gemumu, yeti) == False and yetiCheck == 0):
+                    yeti.state = yeti.RUN 
+# ----------------
+def dieCheck():
+# ----------------
+    global yetiCount, lizardList, yetiList, lizardCount, player, portal, gemumuList, gemumuCount
+    global magicianCount, magicianList
+
+    for yeti in yetiList:
+        if(yeti.state == yeti.DIE and yeti.frame == yeti.frameNum[yeti.DIE]-1):
+                            yetiCount -= 1
+                            yeti.frame = 0
+                            yetiList.remove(yeti)
+    for lizard in lizardList:
+        if(lizard.state == lizard.DIE and lizard.frame == lizard.frameNum[lizard.DIE]-1):
+                            lizardCount -= 1
+                            lizard.frame = 0
+                            lizardList.remove(lizard)
+    for gemumu in gemumuList:
+        if(gemumu.state == gemumu.DIE and gemumu.frame == gemumu.frameNum[gemumu.DIE]-1):
+                            gemumuCount -= 1
+                            gemumu.frame = 0
+                            gemumuList.remove(gemumu)
+    for magician in magicianList:
+        if(magician.state == magician.DIE and magician.frame == magician.frameNum[magician.DIE]-1):
+                            magicianCount -= 1
+                            magician.frame = 0
+                            magicianList.remove(magician)
 # ----------------
 def collision():
 # ----------------
@@ -283,52 +409,88 @@ def collision():
                 yeti.state = yeti.RUN
                 yeti.frame = 0
 
+    if( yetiCount == 0):
+        for lizard in lizardList:
+            lizard.state = lizard.RUN
+        for magician in magicianList:
+            magician.state = magician.RUN
+        for gemumu in gemumuList:
+            gemumu.state = gemumu.RUN
 
-    #elif ( lizardCount > 0 and yetiCount > 0 ):
-    #    for yeti in yetiList:
-    #        for lizard in lizardList:
-    #            if( collide(lizard, yeti) == True ):
-    #                if( yeti.state == yeti.RUN):
-    #                     yeti.state = yeti.ATTACK
-    #                     yeti.frame = 0
-    #                elif( yeti.state == yeti.ATTACK):
-    #                    if( yeti.frame == yeti.frameNum[yeti.ATTACK]-1 and lizard.state != lizard.DIE):
-    #                        lizard.hp -= yeti.att
-    #                        yeti.frame = 0
-    #                        print( "lizard의 Hp : ",lizard.hp )
-    #                if(lizard.hp <= 0):
-    #                    lizard.state = lizard.DIE
-    #                elif( yeti.state == yeti.DIE and yeti.frame == yeti.frameNum[yeti.DIE]-1):
-    #                        yeti.frame = 0
-    #                        yetiCount -= 1
-    #                        yetiList.remove(yeti)                          
-    #                if( lizard.state == lizard.RUN):
-    #                     lizard.state = lizard.ATTACK
-    #                elif( lizard.state == lizard.ATTACK):
-    #                    if( lizard.frame == lizard.frameNum[lizard.ATTACK]-1 and yeti.state != yeti.DIE):
-    #                        yeti.hp -= lizard.att
-    #                        lizard.frame = 0
-    #                        print( "yeti의 Hp", yeti.hp)
-    #                if(yeti.hp <= 0):
-    #                       yeti.state = yeti.DIE
-    #                elif( lizard.state == lizard.DIE and lizard.frame == lizard.frameNum[lizard.DIE]-1 ):
-    #                        lizardCount -= 1
-    #                        lizardList.remove(lizard)
-    #            elif( collide(lizard, yeti) == False):
-    #                   lizard.state = lizard.RUN
-    #                   yeti.state = yeti.RUN
+    if( yetiCount > 0 and lizardCount > 0):
+        for yeti in yetiList:
+            for lizard in lizardList:
+                if( collide(lizard, yeti) == True ):
+                    if(lizard.state == lizard.RUN):
+                        lizard.state = lizard.ATTACK
+                        lizard.frame = 0
+                    elif(lizard.state == lizard.ATTACK):
+                        if(lizard.frame == lizard.frameNum[lizard.ATTACK]-1):
+                           yeti.hp -= lizard.att
+                           lizard.frame = 0
+                           print("yeti hp : ", yeti.hp)
 
-    #elif ( yetiCount <= 0 ):  
-    #     for lizard in lizardList:
-    #         lizard.state = lizard.RUN
-    
-    elif( gemumuCount > 0 and yetiCount > 0):
+                    if(yeti.state == yeti.STAND or yeti.state == yeti.RUN):
+                        yeti.state = yeti.ATTACK
+                        yeti.frame = 0
+                    elif(yeti.state == yeti.ATTACK):
+                        if(yeti.frame == yeti.frameNum[yeti.ATTACK]-1):
+                            lizard.hp -= yeti.att
+                            yeti.frame = 0
+                            print("lizard hp : ", lizard.hp)
+                    
+     
+    if( gemumuCount > 0 and yetiCount > 0):
         for yeti in yetiList:
            for gemumu in gemumuList:
                 if( collide(gemumu, yeti) == True ):
-                    if( gemumu.waveState == 0 ):
-                        gemumu.setMonsterX(yeti.x)
-                        gemumu.createEnergyWave()
+                    if(gemumu.state == gemumu.RUN):
+                        if( gemumu.waveState == 0 ):
+                            gemumu.setMonsterX(yeti.x)
+                            gemumu.createEnergyWave()
+                            gemumu.state = gemumu.ATTACK
+                    elif(gemumu.state == gemumu.ATTACK):
+                        if( gemumu.waveState == 0 ):
+                            gemumu.setMonsterX(yeti.x)
+                            gemumu.createEnergyWave()
+                        if(gemumu.frame == gemumu.frameNum[gemumu.ATTACK]-1):
+                            yeti.hp -= gemumu.att
+                            gemumu.frame = 0
+                            print("yeti hp : ", yeti.hp)
+
+                if( collideDefend(gemumu, yeti) == True ):
+                    if(yeti.state == yeti.STAND or yeti.state == yeti.RUN):
                         yeti.state = yeti.ATTACK
-                        gemumu.state = gemumu.ATTACK
-            
+                        yeti.frame = 0
+                    elif(yeti.state == yeti.ATTACK):
+                        if(yeti.frame == yeti.frameNum[yeti.ATTACK]-1):
+                            gemumu.hp -= yeti.att
+                            yeti.frame = 0
+                            print("gemumu hp : ", gemumu.hp)
+
+    if( magicianCount > 0 and yetiCount > 0):
+        for yeti in yetiList:
+           for magician in magicianList:
+                if( collide(magician, yeti) == True ):
+                    if(magician.state == magician.RUN):
+                        if( magician.fireState == 0 ):
+                            magician.createFire(yeti.x, yeti.y)
+                            magician.state = magician.ATTACK
+                    elif(magician.state == magician.ATTACK):
+                        if( magician.fireState == 0 ):
+                            magician.createFire(yeti.x, yeti.y)
+                            magician.state = magician.ATTACK
+                        if(magician.frame == magician.frameNum[magician.ATTACK]-1):
+                            yeti.hp -= magician.att
+                            magician.frame = 0
+                            print("yeti hp : ", yeti.hp)
+
+                if( collideDefend(magician, yeti) == True ):
+                    if(yeti.state == yeti.STAND or yeti.state == yeti.RUN):
+                        yeti.state = yeti.ATTACK
+                        yeti.frame = 0
+                    elif(yeti.state == yeti.ATTACK):
+                        if(yeti.frame == yeti.frameNum[yeti.ATTACK]-1):
+                            magician.hp -= yeti.att
+                            yeti.frame = 0
+                            print("magician hp : ", magician.hp)

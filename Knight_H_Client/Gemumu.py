@@ -26,7 +26,7 @@ class Gemumu:
 
         self.frametime = { 
                           self.RUN : 0.4,
-                          self.ATTACK : 0.5,
+                          self.ATTACK : 0.2,
                           self.DIE : 0.3 }
 
         self.state = self.RUN
@@ -36,13 +36,22 @@ class Gemumu:
 
         self.currentTime = time.time()
 
-        self.maxHp = 4000
-        self.hp = 4000
-        self.att = 10
+        self.maxHp = 2500
+        self.hp = 2500
+        self.att = 100
 
         self.scrollX = 0
         self.waveState = 0
 
+        self.attackSound = load_wav('GemumuAttack.wav')
+        self.attackSound.set_volume(64)
+
+        self.dieSound = load_wav('GemumuDie.wav')
+        self.dieSound.set_volume(64)
+
+        self.soundList = { self.ATTACK : self.attackSound,
+                          self.DIE : self.dieSound
+            }
     # ----------------
     def update(self):
     # ----------------
@@ -55,10 +64,11 @@ class Gemumu:
     # ----------------
     def draw(self):
     # ----------------
-        self.GemumuImage.clip_draw(200 * self.frame, (200 * self.state), 
-                                    200, 200, self.x - self.backgroundX, self.y)
+        self.GemumuImage.clip_draw(100 * self.frame, (100 * self.state), 
+                                    100, 100, self.x - self.backgroundX, self.y)
         self.draw_bb()
         if(self.waveState == 1):
+            self.energyWave.setBackgroundX(self.backgroundX)
             self.energyWave.draw()
     # ----------------
     def setPlayerState(self, state):
@@ -86,8 +96,9 @@ class Gemumu:
                  if(self.energyWave.frame == (self.energyWave.frameNum - 1)):
                      del(self.energyWave)
                      self.waveState = 0
-
-        
+            if(self.waveState == 1 and self.state == self.RUN ):
+                     del(self.energyWave)
+                     self.waveState = 0        
       
     # ----------------
     def move(self):
@@ -99,11 +110,20 @@ class Gemumu:
     # ----------------
     def motion(self):
     # ----------------
-       pass
+       if( self.state != self.RUN and self.frame == self.frameNum[self.state]-2):
+           self.soundList[self.state].play()
+
+       if( self.hp <= 0):
+           self.state = self.DIE
+    # ----------------
+    def get_bb_defend(self):
+    # ----------------
+        return self.x - 50 - self.backgroundX, self.y - 50, self.x + 50 - self.backgroundX, self.y + 50
+    # ----------------
     # ----------------
     def get_bb(self):
     # ----------------
-        return self.x - 100 - self.backgroundX, self.y - 100, self.x + 150 - self.backgroundX, self.y + 100
+        return self.x - 100 - self.backgroundX, self.y - 100, self.x + 300 - self.backgroundX, self.y + 100
     # ----------------
     def draw_bb(self):
     # ----------------

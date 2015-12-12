@@ -3,39 +3,38 @@ import time
 
 
 
-class EnergyWave:
+class Fire:
     
-    energyWaveImage = None
+    fireImage = None
 
     # ----------------
-    def __init__(self, x, y, mX, bX):
+    def __init__(self, mX, mY, bX):
     # ----------------
 
 
-        if self.energyWaveImage == None:
-            self.energyWaveImage = load_image("EnergyWave.png")
+        if self.fireImage == None:
+            self.fireImage = load_image("Fire.png")
 
 
-        self.x = x
-        self.y = y
+        self.x = mX
+        self.y = mY
         self.frame = 0
         self.currentTime = time.time()
         self.backgroundX = bX
-        self.frametime = 0.3
+        self.frametime = 0.75
         self.frameNum = 4
         self.monsterX = mX
-        self.distance = int((self.monsterX - self.x)/self.frameNum)
+        self.monsterY = mY
 
     # ----------------
     def update(self):
     # ----------------
         self.frameRate()
-        self.move()
         
     # ----------------
     def draw(self):
     # ----------------
-        self.energyWaveImage.clip_draw(70 * self.frame, 0, 70, 70, self.x - self.backgroundX, self.y)
+        self.fireImage.clip_draw(100 * self.frame, 0, 200, 140, self.x - self.backgroundX, self.y)
     # ----------------
     def get_bb(self):
     # ----------------
@@ -58,12 +57,9 @@ class EnergyWave:
         self.backgroundX = x
     
     # ----------------
-    def setMonsterX(self, x):
+    def setMonsterX(self, x, y):
     # ----------------
         self.monsterX = x
-    # ----------------
-    def move(self):
-    # ----------------
-        if(self.x <= self.monsterX - 30):
-                self.x += self.distance
+        self.monsterY = x
+    
     
