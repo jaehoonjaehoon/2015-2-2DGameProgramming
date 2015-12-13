@@ -19,13 +19,13 @@ import Stage2_State
 
 
 
-
 name = "Stage1"
 
 stage1 = None
 player = None
 font = None
 
+storeCheck = False
 
 yetiCount = 0
 lizardCount = 0
@@ -119,8 +119,37 @@ def handle_events():
         if event.type == SDL_QUIT:
             Game_FrameWork.quit()
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
-               exit()
                Game_FrameWork.change_state(Title_State)
+        elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_i):
+            if(ui.storeCheck == False):    
+                ui.storeCheck = True
+            else:
+                ui.storeCheck = False
+
+        elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_1):
+              if(player.mp - lizardMpValue > 0 and ui.storeCheck == False):
+                 lizardList.append(Lizard(player.x))
+                 lizardCount += 1
+                 player.mp -= lizardMpValue
+              else:
+                 print("구매")
+
+                 
+        elif (event.type, event.key) == (SDL_KEYUP, SDLK_2):
+              if(player.mp - gemumuMpValue > 0 and ui.storeCheck == False):
+                  gemumuList.append(Gemumu(player.x))
+                  gemumuCount += 1
+                  player.mp -= gemumuMpValue
+              else:
+                 print("구매")
+
+        elif (event.type, event.key) == (SDL_KEYUP, SDLK_3):
+              if(player.mp - magicianMpValue > 0 and ui.storeCheck == False):
+                  magicianList.append(Magician(player.x))
+                  magicianCount += 1
+                  player.mp -= magicianMpValue
+              else:
+                 print("구매")
         elif (event.type) == SDL_MOUSEMOTION:
               if(87 <= event.x and event.x <= 113 and 18 <= 600 - event.y and 600 - event.y <= 58):
                  if(player.mp - lizardMpValue > 0):
@@ -225,8 +254,7 @@ def draw():
 
     clear_canvas()
     stage1.draw()
-    ui.draw()
-    ui.setPlayerHp(player.hp, player.maxHp)
+    
     
     player.draw()
     
@@ -243,7 +271,9 @@ def draw():
      for magician in magicianList:
           magician.draw()
     portal.draw()
-    
+
+    ui.draw()
+    ui.setPlayerHp(player.hp, player.maxHp)
     update_canvas()
 
 

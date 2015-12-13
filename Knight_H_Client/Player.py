@@ -21,8 +21,8 @@ class Player:
         self.x = 150
         self.y = 150
 
-        self.maxHp = 1000
-        self.hp = 1000
+        self.maxHp = 10000
+        self.hp = 10000
         self.maxMp = 1000
         self.mp = 1000
 
