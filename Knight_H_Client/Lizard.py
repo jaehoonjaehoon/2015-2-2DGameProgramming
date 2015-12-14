@@ -6,7 +6,8 @@ import random
 class Lizard:
    
     LizardImage = None
-
+    barNone = None
+    bar = None
     STAND = 3
     RUN = 2
     ATTACK = 1
@@ -30,6 +31,8 @@ class Lizard:
         self.attackSound = load_wav('LizardAttack.wav')
         self.attackSound.set_volume(64)
 
+        
+
         self.dieSound = load_wav('LizardDie.wav')
         self.dieSound.set_volume(64)
 
@@ -47,6 +50,11 @@ class Lizard:
 
         self.maxHp = 2000
         self.hp = 2000
+        
+        self.barNone = load_image("HpBar2.png")
+        self.bar = load_image("HpBar.png")
+        self.pHp = int(self.hp/self.maxHp) *100
+
         self.att = 50
 
         self.monsterX = 0
@@ -60,13 +68,15 @@ class Lizard:
         if self.state != self.STAND:
             self.move()
         self.motion()
-        
-
+        self.pHp = (self.hp/self.maxHp) * 100
     # ----------------
     def draw(self):
     # ----------------
         self.LizardImage.clip_draw(100 * self.frame, (100 * self.state), 
                                     100, 100, self.x - self.backgroundX, self.y)
+        self.barNone.bar_draw(0, 0, 100, 10, self.x - self.backgroundX- 50, self.y + 300)
+        self.bar.bar_draw(0, 0, (int)(100-(100-self.pHp)), 10, self.x - self.backgroundX- 50, self.y + 300)
+
         self.draw_bb()
     # ----------------
     def setPlayerState(self, state):

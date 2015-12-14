@@ -34,19 +34,23 @@ class Yeti:
         self.state = self.STAND
         self.frame = 0
 
-        self.x, self.y = random.randint(800, 1100), random.randint(150, 300)
+        self.x, self.y = random.randint(800, 1100), random.randint(150, 250)
+
+        
 
         self.currentTime = time.time()
         self.runTime = time.time()
         self.backgroundX = 0
+        self.maxHp = 2000
         self.hp = 2000
         self.att = 300
         self.startCheck = 0
         self.playerX = 0
         self.playerY = 0
-
+        self.barNone = load_image("HpBar2.png")
+        self.bar = load_image("HpBar.png")
+        self.pHp = int(self.hp/self.maxHp) *100
         self.mon = 0
-        self.maxHp = 2000
 
         self.attackSound = load_wav('YetiAttack.wav')
         self.attackSound.set_volume(50)
@@ -64,13 +68,15 @@ class Yeti:
         self.frameRate()
         self.move()
         self.motion()
-
+        self.pHp = (self.hp/self.maxHp) * 100
     # ----------------
     def draw(self):
     # ----------------
         self.yetiImage.clip_draw(150 * self.frame, (150 * self.state), 
                                         150, 150, self.x - self.backgroundX, self.y)
         self.draw_bb()
+        self.barNone.bar_draw(0, 0, 100, 10, self.x - self.backgroundX- 50, self.y + 300)
+        self.bar.bar_draw(0, 0, (int)(100-(100-self.pHp)), 10, self.x - self.backgroundX- 50, self.y + 300)
 
     # ----------------
     def setBackgroundX(self, x):

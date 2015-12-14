@@ -32,6 +32,8 @@ class Gemumu:
         self.state = self.RUN
         self.frame = 0
 
+        
+        
         self.x, self.y = playerX + 50 , random.randint(150, 250)
 
         self.currentTime = time.time()
@@ -42,6 +44,11 @@ class Gemumu:
 
         self.scrollX = 0
         self.waveState = 0
+
+        self.barNone = load_image("HpBar2.png")
+        self.bar = load_image("HpBar.png")
+        self.pHp = int(self.hp/self.maxHp) *100
+
 
         self.attackSound = load_wav('GemumuAttack.wav')
         self.attackSound.set_volume(64)
@@ -59,7 +66,7 @@ class Gemumu:
         if self.state != self.DIE:
             self.move()
         self.motion()
-        
+        self.pHp = (self.hp/self.maxHp) * 100
 
     # ----------------
     def draw(self):
@@ -70,6 +77,9 @@ class Gemumu:
         if(self.waveState == 1):
             self.energyWave.setBackgroundX(self.backgroundX)
             self.energyWave.draw()
+        self.barNone.bar_draw(0, 0, 100, 10, self.x - self.backgroundX- 50, self.y + 300)
+        self.bar.bar_draw(0, 0, (int)(100-(100-self.pHp)), 10, self.x - self.backgroundX- 50, self.y + 300)
+
     # ----------------
     def setPlayerState(self, state):
     # ----------------

@@ -47,7 +47,11 @@ class Magician:
         self.maxHp = 1500
         self.hp = 1500
         self.att = 250
+        
 
+        self.barNone = load_image("HpBar2.png")
+        self.bar = load_image("HpBar.png")
+        self.pHp = int(self.hp/self.maxHp) *100
         self.monsterX = 0
         self.monsterY = 0
         self.scrollX = 0
@@ -59,7 +63,7 @@ class Magician:
         if self.state != self.DIE:
             self.move()
         self.motion()
-        
+        self.pHp = (self.hp/self.maxHp) * 100
 
     # ----------------
     def draw(self):
@@ -70,6 +74,9 @@ class Magician:
         if(self.fireState == 1):
             self.fire.setBackgroundX(self.backgroundX)
             self.fire.draw()
+        self.barNone.bar_draw(0, 0, 100, 10, self.x - self.backgroundX- 50, self.y + 300)
+        self.bar.bar_draw(0, 0, (int)(100-(100-self.pHp)), 10, self.x - self.backgroundX- 50, self.y + 300)
+
     # ----------------
     def setPlayerState(self, state):
     # ----------------

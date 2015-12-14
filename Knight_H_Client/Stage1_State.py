@@ -46,7 +46,7 @@ magicianList = []
 ui = None
 portal = None
 stage1Bgm = None
-
+storeSound = None
 lizardMpValue = 50
 gemumuMpValue = 100
 magicianMpValue = 200
@@ -70,7 +70,7 @@ class Stage1:
 
         
 def enter():
-    global stage1, player, yetiList, ui, portal, yetiCount, stage1Bgm
+    global stage1, player, yetiList, ui, portal, yetiCount, stage1Bgm, storeSound
     stage1 = Stage1()
     player = Player(340)
     lizard = Lizard(player.x)
@@ -81,7 +81,10 @@ def enter():
     stage1Bgm.set_volume(100)
     stage1Bgm.repeat_play()
 
-    for i in range(0, 10):
+    storeSound = load_wav('StoreSound.wav')
+    storeSound.set_volume(64)
+
+    for i in range(0, 11):
         yetiList.append(Yeti())
         yetiCount += 1
 
@@ -112,7 +115,7 @@ def resume():
 
 def handle_events():
     global player, UI, lizardMpValue, gemumuMpValue, magicianMpValue, lizardList, lizardButton, lizardCount
-    global gemumuList, magicianList, magicianButton, gemumuButton, gemumuCount, magicianCount
+    global gemumuList, magicianList, magicianButton, gemumuButton, gemumuCount, magicianCount, storeSound
     events = get_events()
 
     for event in events:
@@ -121,6 +124,9 @@ def handle_events():
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                Game_FrameWork.change_state(Title_State)
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_i):
+
+            storeSound.play()
+
             if(ui.storeCheck == False):    
                 ui.storeCheck = True
             else:
@@ -131,8 +137,11 @@ def handle_events():
                  lizardList.append(Lizard(player.x))
                  lizardCount += 1
                  player.mp -= lizardMpValue
-              else:
-                 print("구매")
+              elif(ui.storeCheck == True and ui.money > 100 ):
+                 ui.money -= 100
+                 for lizard in lizardList:
+                     lizard.maxHp += 100
+                     lizard.hp = lizard.maxHp
 
                  
         elif (event.type, event.key) == (SDL_KEYUP, SDLK_2):
@@ -140,16 +149,37 @@ def handle_events():
                   gemumuList.append(Gemumu(player.x))
                   gemumuCount += 1
                   player.mp -= gemumuMpValue
-              else:
-                 print("구매")
+              elif(ui.storeCheck == True and ui.money > 200 ):
+                 ui.money -= 200
+                 for gemumu in gemumuList:
+                     gemumu.maxHp += 100
+                     gemumu.hp = gemumu.maxHp
 
         elif (event.type, event.key) == (SDL_KEYUP, SDLK_3):
               if(player.mp - magicianMpValue > 0 and ui.storeCheck == False):
                   magicianList.append(Magician(player.x))
                   magicianCount += 1
                   player.mp -= magicianMpValue
-              else:
-                 print("구매")
+              elif(ui.storeCheck == True and ui.money > 400 ):
+                 ui.money -= 400
+                 for magician in magicianList:
+                     magician.maxHp += 100
+                     magician.hp = magician.maxHp
+        elif (event.type, event.key) == (SDL_KEYUP, SDLK_4):
+            if(ui.storeCheck == True and ui.money > 100 ):
+                 ui.money -= 100
+                 for lizard in lizardList:
+                     lizard.att += 50
+        elif (event.type, event.key) == (SDL_KEYUP, SDLK_5):
+            if(ui.storeCheck == True and ui.money > 200 ):
+                 ui.money -= 200
+                 for gemumu in gemumuList:
+                     gemumu.att += 50
+        elif (event.type, event.key) == (SDL_KEYUP, SDLK_6):
+            if(ui.storeCheck == True and ui.money > 300 ):
+                 ui.money -= 300
+                 for magician in magicianList:
+                     magician.att += 50
         elif (event.type) == SDL_MOUSEMOTION:
               if(87 <= event.x and event.x <= 113 and 18 <= 600 - event.y and 600 - event.y <= 58):
                  if(player.mp - lizardMpValue > 0):
@@ -165,7 +195,7 @@ def handle_events():
                  if(player.mp - magicianMpValue > 0):
                       ui.MagicianFrame = 27
                  else:
-                     ui.Magician = 54
+                     ui.MagicianFrame = 54
               else:
                   ui.LizardFrame = 0
                   ui.GemumuFrame = 0
@@ -242,6 +272,8 @@ def update():
             gemumu.update()
     portal.setBackgroundX(stage1.backgroundX)
     
+    ui.update()
+
     scroll()
     collision()
     dieCheck()
@@ -273,7 +305,9 @@ def draw():
     portal.draw()
 
     ui.draw()
-    ui.setPlayerHp(player.hp, player.maxHp)
+    ui.drawPlayerHp(player.hp, player.maxHp)
+    ui.drawPlayerMp(player.mp, player.maxMp)
+
     update_canvas()
 
 
@@ -394,13 +428,15 @@ def stateCheck():
 def dieCheck():
 # ----------------
     global yetiCount, lizardList, yetiList, lizardCount, player, portal, gemumuList, gemumuCount
-    global magicianCount, magicianList
+    global magicianCount, magicianList, ui
 
     for yeti in yetiList:
         if(yeti.state == yeti.DIE and yeti.frame == yeti.frameNum[yeti.DIE]-1):
                             yetiCount -= 1
                             yeti.frame = 0
                             yetiList.remove(yeti)
+                            ui.score += random.randint(500, 1500)
+                            ui.money += random.randint(300, 800)
     for lizard in lizardList:
         if(lizard.state == lizard.DIE and lizard.frame == lizard.frameNum[lizard.DIE]-1):
                             lizardCount -= 1
@@ -420,9 +456,30 @@ def dieCheck():
 def collision():
 # ----------------
     global yetiCount, lizardList, yetiList, lizardCount, player, portal, gemumuList, gemumuCount
-    global magicianCount, magicianList
+    global magicianCount, magicianList, ui
     
-    if collide(portal, player):
+    if collide(portal, player) and yetiCount == 0:
+        f = open("stageInfoLoad.txt", 'w')
+       
+        data = "%d\n" % ui.money
+        f.write(data) 
+        data = "%d\n" % ui.score
+        f.write(data)
+        f.close()
+
+        if lizardCount > 0:
+            for lizard in lizardList:
+                lizardList.remove(lizard)
+                lizardCount -=1
+        if gemumuCount > 0:
+            for gemumu in gemumuList:
+                gemumuList.remove(gemumu)
+                gemumuCount -=1
+        if magicianCount > 0:
+            for magician in magicianList:
+                magicianList.remove(magician)
+                magicianCount -=1
+
         Game_FrameWork.change_state(Stage2_State)
         return
 

@@ -210,6 +210,13 @@ class Image:
         dest_rect = to_sdl_rect(x-w/2, y-h/2, w, h)
         SDL_RenderCopy(renderer, self.texture, src_rect, dest_rect)
 
+    def bar_draw(self, left, bottom, width, height, x, y, w=None, h=None):
+        """Clip a rectangle from image and draw"""
+        if w == None and h == None:
+            w,h = width, height
+        src_rect = SDL_Rect(left, self.h - bottom - height, width, height)
+        dest_rect = to_sdl_rect(x, y/2, w, h)
+        SDL_RenderCopy(renderer, self.texture, src_rect, dest_rect) 
 
     def clip_draw_to_origin(self, left, bottom, width, height, x, y, w=None, h=None):
         """Clip a rectangle from image and draw"""

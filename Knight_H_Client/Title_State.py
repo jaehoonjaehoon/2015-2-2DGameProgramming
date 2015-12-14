@@ -1,5 +1,6 @@
 ﻿import Game_FrameWork
 import Stage1_State
+import Stage2_State
 
 from pico2d import *
 from pico2d import load_music

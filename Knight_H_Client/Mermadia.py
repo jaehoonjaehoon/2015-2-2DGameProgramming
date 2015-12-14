@@ -1,4 +1,4 @@
-from pico2d import *
+﻿from pico2d import *
 
 import time
 import random
@@ -34,15 +34,22 @@ class Mermadia:
         self.x, self.y = random.randint(400, 1100), random.randint(150, 300)
 
         self.currentTime = time.time()
+        self.runTime = time.time()
         self.backgroundX = 0
         self.hp = 7000
+        self.maxHp = 7000
         self.att = 500
 
         self.playerX = 0
         self.playerY = 0
 
         self.mon = 0
-        self.maxHp = 1200
+        self.startCheck = 0
+
+        self.barNone = load_image("HpBar2.png")
+        self.bar = load_image("HpBar.png")
+        self.pHp = int(self.hp/self.maxHp) *100
+
 
         self.attackSound = load_wav('MermaidaAttack.wav')
         self.attackSound.set_volume(50)
@@ -60,13 +67,15 @@ class Mermadia:
         self.frameRate()
         self.move()
         self.motion()
-
+        self.pHp = (self.hp/self.maxHp) * 100
     # ----------------
     def draw(self):
     # ----------------
         self.mermadiaImage.clip_draw(100 * self.frame, (100 * self.state), 
                                         100, 100, self.x - self.backgroundX, self.y)
         self.draw_bb()
+        self.barNone.bar_draw(0, 0, 100, 10, self.x - self.backgroundX- 50, self.y + 300)
+        self.bar.bar_draw(0, 0, (int)(100-(100-self.pHp)), 10, self.x - self.backgroundX- 50, self.y + 300)
 
     # ----------------
     def setBackgroundX(self, x):
@@ -88,9 +97,13 @@ class Mermadia:
     # ----------------
     def motion(self):
     # ----------------
-       if( self.state == self.DIE or self.state == self.ATTACK and self.frame == self.frameNum[self.state]-1):
+       if( self.state == self.DIE or self.state == self.ATTACK and self.frame == self.frameNum[self.state]-2):
            self.soundList[self.state].play()
-        
+       if( self.hp <= 0):
+           self.state = self.DIE
+       if time.time() - self.runTime >= 4.0 and self.startCheck == 0:
+           self.state = self.RUN
+           self.startCheck = 1       
 
     # ----------------
     def move(self):
