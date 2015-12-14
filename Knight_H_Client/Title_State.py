@@ -1,6 +1,7 @@
 ﻿import Game_FrameWork
 import Stage1_State
 import Stage2_State
+import Stage3_State
 
 from pico2d import *
 from pico2d import load_music
@@ -28,7 +29,7 @@ def handle_events():
             if(event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 Game_FrameWork.quit()
             elif ( event.type, event.key ) == (SDL_KEYDOWN, SDLK_SPACE):
-                Game_FrameWork.change_state(Stage1_State)
+                Game_FrameWork.change_state(Stage3_State)
 
 # ----------------
 def draw():

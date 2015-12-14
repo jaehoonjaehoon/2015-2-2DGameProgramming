@@ -12,7 +12,6 @@ from Lizard import Lizard
 from Gemumu import Gemumu
 from Magician import Magician
 from Portal import Portal
-from Mermadia import Mermadia
 import Game_FrameWork
 import Stage3_State
 
@@ -471,9 +470,9 @@ def collision():
     if collide(portal, player) and mermadiaCount == 0:
         f = open("stageInfoLoad.txt", 'w')
        
-        data = "%d " % ui.money
+        data = "%d\n" % ui.money
         f.write(data) 
-        data = "%d " % ui.score
+        data = "%d\n" % ui.score
         f.write(data)
         f.close()
 
@@ -490,7 +489,7 @@ def collision():
                 magicianList.remove(magician)
                 magicianCount -=1
 
-        Game_FrameWork.change_state(Stage2_State)
+        Game_FrameWork.change_state(Stage3_State)
         return
 
     if (lizardCount == 0 and gemumuCount == 0 and magicianCount == 0 ):

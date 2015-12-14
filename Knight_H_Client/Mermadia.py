@@ -110,6 +110,8 @@ class Mermadia:
     # ----------------
         if self.state == self.RUN and self.x > 10:
             self.x -= 2
+        elif self.x <= 10:
+            self.x = random.randint(800, 1100)
     # ----------------
     def get_bb(self):
     # ----------------
