@@ -371,10 +371,10 @@ def stateCheck():
     magicianTodragon = 0
     dragonCheck = 0
 
-    if player.hp <= 0 :
-        for dragon in dragonList:
-           dragonList.remove(dragon)
-        Game_FrameWork.change_state(Title_State)
+    #if player.hp <= 0 :
+    #    for dragon in dragonList:
+    #       dragonList.remove(dragon)
+    #    Game_FrameWork.change_state(Title_State)
 
     if(lizardCount > 0 and dragonCount > 0 ):
         for dragon in dragonList:

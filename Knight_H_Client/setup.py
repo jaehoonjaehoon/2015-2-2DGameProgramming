@@ -97,7 +97,13 @@ py2exe_options = dict(
     )
 
 
-resources = " ".split()
+resources = "YetiDie.wav YetiAttack.wav Yeti.png UI_Down(800x93).png TitleBgm.mp3 Title_State.png \
+TimeUI.png StoreSound.wav Store.png stageInfoLoad.txt stage3Bgm.mp3 Stage3(1125x600).png \
+stage2Bgm.mp3 Stage2(1125x600).png Stage1Bgm.mp3 Stage1(1125x600).png ScoreUI.png Player.png \
+MP.png MoneyUI.png MermaidaDie.wav MermaidaAttack.wav Mermadia.png MagicianUI.png MagicianDie.wav \
+MagicianAttack.wav Magician.png logoBgm.mp3 Logo_State.png LizardUI.png LizardDie.wav LizardAttack.wav \
+Lizard.png HpBar2.png HpBar.png HP.png GemumuUI.png GemumuDie.wav GemumuAttack.wav Gemumu.png \
+Fire.png EnergyWave.png Dragon.png ConsolaMalgun.ttf BoardUI.png".split()
 
 if platform.architecture()[0] == '32bit':
     sdl_folder = './SDL2/x86/'

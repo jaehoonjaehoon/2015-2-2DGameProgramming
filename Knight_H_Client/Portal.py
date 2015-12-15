@@ -1,4 +1,4 @@
-from pico2d import *
+﻿from pico2d import *
 
 class Portal:
     # ----------------
@@ -12,8 +12,8 @@ class Portal:
     # ----------------
     def draw(self):
     # ----------------
-        self.draw_bb()
-
+       # self.draw_bb()
+       pass
     # ----------------
     def setBackgroundX(self, x):
     # ----------------

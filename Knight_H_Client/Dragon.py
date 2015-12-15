@@ -73,7 +73,7 @@ class Dragon:
     # ----------------
         self.dragonImage.clip_draw(200 * self.frame, (200 * self.state), 
                                         200, 200, self.x - self.backgroundX, self.y)
-        self.draw_bb()
+       # self.draw_bb()
         self.barNone.bar_draw(0, 0, 100, 10, self.x - self.backgroundX- 50, self.y + 300)
         self.bar.bar_draw(0, 0, (int)(100-(100-self.pHp)), 10, self.x - self.backgroundX- 50, self.y + 300)
 

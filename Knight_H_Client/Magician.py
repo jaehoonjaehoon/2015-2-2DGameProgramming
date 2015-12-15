@@ -70,7 +70,7 @@ class Magician:
     # ----------------
         self.MagicianImage.clip_draw(100 * self.frame, (100 * self.state), 
                                     100, 100, self.x - self.backgroundX, self.y)
-        self.draw_bb()
+        #self.draw_bb()
         if(self.fireState == 1):
             self.fire.setBackgroundX(self.backgroundX)
             self.fire.draw()

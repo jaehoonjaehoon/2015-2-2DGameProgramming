@@ -73,7 +73,7 @@ class Gemumu:
     # ----------------
         self.GemumuImage.clip_draw(100 * self.frame, (100 * self.state), 
                                     100, 100, self.x - self.backgroundX, self.y)
-        self.draw_bb()
+        #self.draw_bb()
         if(self.waveState == 1):
             self.energyWave.setBackgroundX(self.backgroundX)
             self.energyWave.draw()

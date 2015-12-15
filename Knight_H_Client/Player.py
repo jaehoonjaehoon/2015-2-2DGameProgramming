@@ -58,7 +58,7 @@ class Player:
     def draw(self):
     #-----------------
         self.playerImage.clip_draw(self.frame * 150, self.dir * 150 , 150, 150, self.x, self.y)
-        self.draw_bb()
+       # self.draw_bb()
     # ----------------
     def handle_events(self, event):
     # ----------------
